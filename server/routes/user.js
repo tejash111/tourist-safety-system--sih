@@ -7,6 +7,6 @@ const route = express.Router();
 route.post("/register", RegisterUser);
 route.post("/login", loginUser);
 route.post("/logout", logout);
-route.post("/auth", userAuthVerification);
+route.post("/alerts/panic", userAuthVerification, alertpost);
 
 export default route;
