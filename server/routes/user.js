@@ -1,12 +1,12 @@
-const express = require("express")
-const {loginUser,logout,RegisterUser}=require("../controller/user")
-const userAuthVerification= require("../middleware/index")
+import express from "express";
+import { loginUser, logout, RegisterUser } from "../controller/user.logic.js";
+import userAuthVerification from "../middleware/index.js";
 
-const route = express.Router()
+const route = express.Router();
 
-route.post("/register",RegisterUser)
-route.post("/login",loginUser)
-route.post("/logout",logout);
-route.post("/auth",userAuthVerification)
+route.post("/register", RegisterUser);
+route.post("/login", loginUser);
+route.post("/logout", logout);
+route.post("/auth", userAuthVerification);
 
-module.exports=route
+export default route;
