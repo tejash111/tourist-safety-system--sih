@@ -1,11 +1,9 @@
-const { string } = require('joi');
-const mongoose = require('mongoose')
+import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema({
-    name:String,
-    password:String,
-    email:String
+  name: String,
+  password: String,
+  email: String,
+});
 
-})
-
-module.exports = mongoose.model("User",UserSchema);
+export default mongoose.model("User", UserSchema);

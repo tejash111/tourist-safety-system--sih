@@ -1,5 +1,5 @@
-const jwt = require("jsonwebtoken");
-const User = require("../models/user");
+import jwt from "jsonwebtoken";
+import User from "../models/user.js";
 
 const userAuthVerification = async (req, res, next) => {
   const token = req.cookies.token;
@@ -29,7 +29,7 @@ const userAuthVerification = async (req, res, next) => {
     req.user = userInfo;
     req.userId = userInfo._id;
 
-    next(); // 
+    next(); //
   } catch (error) {
     console.error(error);
     return res.status(401).json({
@@ -39,4 +39,4 @@ const userAuthVerification = async (req, res, next) => {
   }
 };
 
-module.exports = userAuthVerification;
+export default userAuthVerification;
