@@ -1,2 +1,44 @@
 .nodemodules
 env
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Coverage / testing
+coverage/
+*.lcov
+
+# Temp / uploads (if used)
+uploads/
+tmp/
+
+# Optional lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
