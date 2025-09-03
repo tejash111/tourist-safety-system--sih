@@ -9,14 +9,18 @@ const socketio=require('socket.io')
 const server=http.createServer()
 
 const io=socketio(server)
+import express from "express";
+import "./database/db.js";
+import useroutes from "./routes/user.js";
+import cookieParser from "cookie-parser";
 
-const app = express()
+const app = express();
 
 //middlewares
-app.use(express.json())
-app.use(cookieParser())
+app.use(express.json());
+app.use(cookieParser());
 
-app.use('/api/user/',useroutes)
+app.use("/api/user/", useroutes);
 
 //socket
 io.on("connection",function (socket){
