@@ -54,12 +54,44 @@ const TouristApp = () => {
     { name: "Tourist Helpline", number: "1363" }
   ]);
 
-  // Risk zones data
-  const riskZones = [
-    { id: 1, name: "Forest Area", lat: 26.1445, lng: 91.7362, radius: 2000, risk: "high" },
-    { id: 2, name: "Remote Hills", lat: 26.1545, lng: 91.7462, radius: 1500, risk: "medium" },
-    { id: 3, name: "Border Area", lat: 26.1345, lng: 91.7262, radius: 3000, risk: "high" }
-  ];
+  // Heatmap zones with risk levels around user location
+  const [heatmapZones, setHeatmapZones] = useState([]);
+  
+  // Generate random heatmap zones around user's location
+  const generateHeatmapZones = (userLat, userLng) => {
+    const zones = [];
+    const zoneTypes = [
+      { name: "Construction Site", risk: "high", color: "#ef4444", radius: 800 },
+      { name: "Dense Traffic Area", risk: "medium", color: "#f59e0b", radius: 1200 },
+      { name: "Crowded Market", risk: "medium", color: "#f59e0b", radius: 600 },
+      { name: "Industrial Zone", risk: "high", color: "#ef4444", radius: 1500 },
+      { name: "Railway Crossing", risk: "high", color: "#ef4444", radius: 400 },
+      { name: "Bus Terminal", risk: "medium", color: "#f59e0b", radius: 800 },
+      { name: "Dark Alley", risk: "high", color: "#ef4444", radius: 300 },
+      { name: "Tourist Hotspot", risk: "low", color: "#10b981", radius: 1000 },
+      { name: "Police Station Area", risk: "low", color: "#10b981", radius: 500 },
+      { name: "Hospital Zone", risk: "low", color: "#10b981", radius: 700 }
+    ];
+
+    for (let i = 0; i < 8; i++) {
+      const angle = (i * 45) * (Math.PI / 180); // Distribute around circle
+      const distance = 0.01 + Math.random() * 0.02; // Random distance up to ~2km
+      const zoneType = zoneTypes[Math.floor(Math.random() * zoneTypes.length)];
+      
+      zones.push({
+        id: i + 1,
+        name: zoneType.name,
+        lat: userLat + distance * Math.cos(angle),
+        lng: userLng + distance * Math.sin(angle),
+        radius: zoneType.radius + Math.random() * 200,
+        risk: zoneType.risk,
+        color: zoneType.color,
+        intensity: 0.3 + Math.random() * 0.4
+      });
+    }
+    
+    return zones;
+  };
 
   const router = useRouter();
   const { user, logout } = useAuth();
@@ -91,21 +123,56 @@ const TouristApp = () => {
     }
   }, []);
 
-  // Calculate safety score based on location
+  // Calculate safety score and check for zone warnings
   const calculateSafetyScore = (lat, lng) => {
     let score = 100;
     let inRiskZone = false;
+    let currentZones = [];
     
-    riskZones.forEach(zone => {
+    heatmapZones.forEach(zone => {
       const distance = getDistance(lat, lng, zone.lat, zone.lng);
       if (distance < zone.radius) {
         inRiskZone = true;
-        score -= zone.risk === 'high' ? 40 : 20;
+        currentZones.push(zone);
+        
+        if (zone.risk === 'high') {
+          score -= 30;
+          // Show warning for high risk zones
+          if (typeof window !== 'undefined' && document && !document.querySelector('.risk-warning-active')) {
+            showLocationWarning(zone);
+          }
+        } else if (zone.risk === 'medium') {
+          score -= 15;
+        }
       }
     });
     
     setIsInRiskZone(inRiskZone);
     return Math.max(score, 0);
+  };
+
+  // Show location-based warning
+  const showLocationWarning = (zone) => {
+    if (typeof window !== 'undefined' && document) {
+      const warningDiv = document.createElement('div');
+      warningDiv.className = 'risk-warning-active fixed top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-bounce';
+      warningDiv.innerHTML = `
+        <div class="flex items-center gap-2">
+          <span class="text-lg">⚠️</span>
+          <span class="font-bold">WARNING: You've entered ${zone.name}</span>
+        </div>
+        <div class="text-sm mt-1">Stay alert and follow safety protocols</div>
+      `;
+      
+      document.body.appendChild(warningDiv);
+      
+      // Auto remove after 5 seconds
+      setTimeout(() => {
+        if (warningDiv && warningDiv.parentNode) {
+          warningDiv.remove();
+        }
+      }, 5000);
+    }
   };
 
   const getDistance = (lat1, lng1, lat2, lng2) => {
@@ -130,6 +197,12 @@ const TouristApp = () => {
         (pos) => {
           const { latitude, longitude } = pos.coords;
           setPosition([latitude, longitude]);
+          
+          // Generate heatmap zones around user location (only once)
+          if (heatmapZones.length === 0) {
+            const zones = generateHeatmapZones(latitude, longitude);
+            setHeatmapZones(zones);
+          }
           
           // Calculate safety score
           const score = calculateSafetyScore(latitude, longitude);
@@ -276,38 +349,182 @@ const TouristApp = () => {
         </div>
       </nav>
 
-      {/* Map */}
-      <main className="flex-1 p-6">
-        <div className="rounded-2xl overflow-hidden shadow-lg">
-          <MapContainer
-            style={mapStyles}
-            center={position}
-            zoom={13}
-            scrollWheelZoom={true}
-          >
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
+      {/* Dashboard Content */}
+      <main className="flex-1 p-6 space-y-6">
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-500">
+            <div className="flex items-center">
+              <Shield className="h-8 w-8 text-green-600" />
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Safety Score</p>
+                <p className="text-2xl font-bold text-gray-900">{safetyScore}%</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500">
+            <div className="flex items-center">
+              <MapPin className="h-8 w-8 text-blue-600" />
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Active Zones</p>
+                <p className="text-2xl font-bold text-gray-900">{heatmapZones.length}</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-yellow-500">
+            <div className="flex items-center">
+              <AlertTriangle className="h-8 w-8 text-yellow-600" />
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Risk Areas</p>
+                <p className="text-2xl font-bold text-gray-900">{heatmapZones.filter(z => z.risk === 'high').length}</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-purple-500">
+            <div className="flex items-center">
+              <Phone className="h-8 w-8 text-purple-600" />
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Status</p>
+                <p className="text-lg font-bold text-gray-900">{isInRiskZone ? 'Alert' : 'Safe'}</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
-            {/* Show all user markers */}
-            {Object.values(userLocations).map((user) => (
-              <Marker
-                key={user.id}
-                position={[user.latitude, user.longitude]}
-                icon={leafletIcon}
-              >
+        {/* Map with Heatmaps */}
+        <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold text-gray-900">Live Location & Risk Heatmap</h2>
+            <div className="flex gap-4 text-sm">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                <span>Safe Zone</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                <span>Caution Zone</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                <span>High Risk Zone</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="rounded-xl overflow-hidden" style={{ height: "500px" }}>
+            <MapContainer
+              style={{ height: "100%", width: "100%" }}
+              center={position}
+              zoom={14}
+              scrollWheelZoom={true}
+            >
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+
+              {/* Your current location */}
+              <Marker position={position} icon={leafletIcon}>
                 <Popup>
-                  User ID: {user.id}
-                  <br />
-                  Lat: {user.latitude.toFixed(6)}
-                  <br />
-                  Lng: {user.longitude.toFixed(6)}
+                  <div className="text-center">
+                    <strong>📍 Your Location</strong>
+                    <br />
+                    Safety Score: <span className={`font-bold ${safetyScore >= 70 ? 'text-green-600' : safetyScore >= 40 ? 'text-yellow-600' : 'text-red-600'}`}>{safetyScore}%</span>
+                    <br />
+                    Lat: {position[0].toFixed(6)}
+                    <br />
+                    Lng: {position[1].toFixed(6)}
+                  </div>
                 </Popup>
               </Marker>
-            ))}
-          </MapContainer>
+
+              {/* Heatmap zones */}
+              {heatmapZones.map((zone) => (
+                <Circle
+                  key={zone.id}
+                  center={[zone.lat, zone.lng]}
+                  radius={zone.radius}
+                  color={zone.color}
+                  fillColor={zone.color}
+                  fillOpacity={zone.intensity}
+                  weight={2}
+                >
+                  <Popup>
+                    <div className="text-center">
+                      <strong>{zone.name}</strong>
+                      <br />
+                      Risk Level: <span className={`font-bold ${zone.risk === 'high' ? 'text-red-600' : zone.risk === 'medium' ? 'text-yellow-600' : 'text-green-600'}`}>
+                        {zone.risk.toUpperCase()}
+                      </span>
+                      <br />
+                      Radius: {Math.round(zone.radius)}m
+                    </div>
+                  </Popup>
+                </Circle>
+              ))}
+
+              {/* Other users */}
+              {Object.values(userLocations).map((user) => (
+                <Marker
+                  key={user.id}
+                  position={[user.latitude, user.longitude]}
+                  icon={leafletIcon}
+                >
+                  <Popup>
+                    <div>
+                      <strong>👤 Other Tourist</strong>
+                      <br />
+                      ID: {user.id.substring(0, 8)}...
+                      <br />
+                      Lat: {user.latitude.toFixed(6)}
+                      <br />
+                      Lng: {user.longitude.toFixed(6)}
+                    </div>
+                  </Popup>
+                </Marker>
+              ))}
+            </MapContainer>
+          </div>
         </div>
+
+        {/* Risk Zone Details */}
+        {heatmapZones.length > 0 && (
+          <div className="bg-white rounded-xl shadow-lg p-6">
+            <h3 className="text-lg font-bold text-gray-900 mb-4">🗺️ Nearby Risk Zones</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {heatmapZones.map((zone) => (
+                <div
+                  key={zone.id}
+                  className={`p-4 rounded-lg border-l-4 ${
+                    zone.risk === 'high' ? 'border-red-500 bg-red-50' :
+                    zone.risk === 'medium' ? 'border-yellow-500 bg-yellow-50' :
+                    'border-green-500 bg-green-50'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-semibold text-gray-900">{zone.name}</h4>
+                    <span className={`px-2 py-1 rounded-full text-xs font-bold ${
+                      zone.risk === 'high' ? 'bg-red-100 text-red-800' :
+                      zone.risk === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                      'bg-green-100 text-green-800'
+                    }`}>
+                      {zone.risk.toUpperCase()}
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-600 mt-2">
+                    Distance: ~{Math.round(getDistance(position[0], position[1], zone.lat, zone.lng))}m
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Coverage: {Math.round(zone.radius)}m radius
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </main>
 
       {/* Chatbot Section */}
