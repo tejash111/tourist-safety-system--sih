@@ -1,24 +1,20 @@
 "use client";
 import dynamic from "next/dynamic";
-import "leaflet/dist/leaflet.css";
-import L from "leaflet";
 import { useRouter } from "next/navigation";
 import { io } from "socket.io-client";
 import { useState, useEffect } from "react";
 import { Bot, HelpCircle, IdCard, LogIn } from "lucide-react";
 
-// Leaflet custom icon
-const icon = L.icon({
-  iconUrl: "/pin.png",
-  iconSize: [22, 35],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-});
+// Import Leaflet CSS dynamically
+import("leaflet/dist/leaflet.css");
 
 // Socket.io connection
-export const socket = io("http://localhost:3000", {
-  transports: ["websocket"],
+const socketUrl = process.env.NODE_ENV === 'production' 
+  ? `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co:3001`
+  : "http://localhost:3001";
+  
+export const socket = io(socketUrl, {
+  transports: ["websocket", "polling"],
 });
 
 // Dynamic imports for Leaflet
@@ -48,8 +44,24 @@ const Home = () => {
   const [position, setPosition] = useState(null);
   const [userLocations, setUserLocations] = useState({});
   const [chatOpen, setChatOpen] = useState(false);
+  const [leafletIcon, setLeafletIcon] = useState(null);
 
   const router = useRouter();
+
+  // Initialize Leaflet icon on client side
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const L = require('leaflet');
+      const icon = L.icon({
+        iconUrl: "/pin.png",
+        iconSize: [22, 35],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41],
+      });
+      setLeafletIcon(icon);
+    }
+  }, []);
 
   // Track my location
   useEffect(() => {
@@ -92,7 +104,7 @@ const Home = () => {
     };
   }, []);
 
-  if (!position) {
+  if (!position || !leafletIcon) {
     return (
       <div className="m-10 flex items-center justify-center h-96">
         <div className="text-center">
@@ -149,7 +161,7 @@ const Home = () => {
               <Marker
                 key={user.id}
                 position={[user.latitude, user.longitude]}
-                icon={icon}
+                icon={leafletIcon}
               >
                 <Popup>
                   User ID: {user.id}

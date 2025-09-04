@@ -1,5 +1,5 @@
 import express from "express";
-import { loginUser, logout, RegisterUser } from "../controller/user.logic.js";
+import { loginUser, logout, RegisterUser, alertpost } from "../controller/user.logic.js";
 import userAuthVerification from "../middleware/index.js";
 
 const route = express.Router();

@@ -1,8 +1,7 @@
-import User from "../models/index.js";
+import { User, Alert } from "../models/index.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { ethers } from "ethers";
-import { Alert } from "../models/index.js";
 //genrate jwt token
 const generateToken = (getId) => {
   return jwt.sign({ id: getId }, "SECRET_KEY", { expiresIn: "7d" });
