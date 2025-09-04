@@ -2,6 +2,8 @@
 import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
 import { io } from "socket.io-client";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import { useAuth } from "@/contexts/AuthContext";
 import { 
   AlertTriangle, 
   Users, 
@@ -50,10 +52,11 @@ const Circle = dynamic(
   { ssr: false }
 );
 
-const Dashboard = () => {
+function DashboardComponent() {
   const [tourists, setTourists] = useState({});
   const [alerts, setAlerts] = useState([]);
   const [selectedTourist, setSelectedTourist] = useState(null);
+  const { user, logout } = useAuth();
   const [leafletIcon, setLeafletIcon] = useState(null);
   const [riskZones, setRiskZones] = useState([]);
   const [stats, setStats] = useState({
@@ -460,6 +463,12 @@ const Dashboard = () => {
       </div>
     </div>
   );
-};
+}
 
-export default Dashboard;
+export default function Dashboard() {
+  return (
+    <ProtectedRoute>
+      <DashboardComponent />
+    </ProtectedRoute>
+  );
+}

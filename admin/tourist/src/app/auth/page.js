@@ -1,10 +1,13 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
 import { Eye, EyeOff, Camera, MapPin, Plane } from "lucide-react";
+import PublicRoute from "@/components/PublicRoute";
 
-export default function LoginPage() {
+function LoginPage() {
   const router = useRouter();
+  const { login, register } = useAuth();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -23,35 +26,18 @@ export default function LoginPage() {
     setError("");
     setSuccess("");
 
-    try {
-      const response = await fetch('/api/user/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        setSuccess("Login successful! Redirecting...");
-        setTimeout(() => {
-          router.push('/');
-        }, 1000);
-      } else {
-        setError(data.message || "Login failed. Please try again.");
-      }
-    } catch (err) {
-      console.error("Login error:", err);
-      setError("Connection error. Please try again.");
-    } finally {
-      setIsLoading(false);
+    const result = await login(formData.email, formData.password);
+    
+    if (result.success) {
+      setSuccess("Login successful! Redirecting...");
+      setTimeout(() => {
+        router.push('/');
+      }, 1000);
+    } else {
+      setError(result.message);
     }
+    
+    setIsLoading(false);
   };
 
   const handleRegister = async (e) => {
@@ -60,36 +46,18 @@ export default function LoginPage() {
     setError("");
     setSuccess("");
 
-    try {
-      const response = await fetch('/api/user/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        setSuccess("Registration successful! Redirecting...");
-        setTimeout(() => {
-          router.push('/');
-        }, 1000);
-      } else {
-        setError(data.message || "Registration failed. Please try again.");
-      }
-    } catch (err) {
-      console.error("Registration error:", err);
-      setError("Connection error. Please try again.");
-    } finally {
-      setIsLoading(false);
+    const result = await register(formData.name, formData.email, formData.password);
+    
+    if (result.success) {
+      setSuccess("Registration successful! Redirecting...");
+      setTimeout(() => {
+        router.push('/');
+      }, 1000);
+    } else {
+      setError(result.message);
     }
+    
+    setIsLoading(false);
   };
 
   const handleInputChange = (field, value) => {
@@ -373,5 +341,13 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AuthPage() {
+  return (
+    <PublicRoute>
+      <LoginPage />
+    </PublicRoute>
   );
 }
