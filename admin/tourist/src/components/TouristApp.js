@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
-import { Bot, HelpCircle, IdCard, LogOut, AlertTriangle, Shield, Phone } from "lucide-react";
+import { Bot, HelpCircle, IdCard, LogOut, AlertTriangle, Shield, Phone, MapPin } from "lucide-react";
 
 // Import Leaflet CSS dynamically
 import("leaflet/dist/leaflet.css");
