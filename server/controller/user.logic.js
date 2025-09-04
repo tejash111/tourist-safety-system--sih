@@ -70,7 +70,7 @@ const loginUser = async (req, res, next) => {
         message: "wrong email",
       });
     }
-    const checkAuth = bcrypt.compare(password, getUser.password);
+    const checkAuth = await bcrypt.compare(password, getUser.password);
 
     if (!checkAuth) {
       return res.status(401).json({

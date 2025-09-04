@@ -14,23 +14,82 @@ export default function LoginPage() {
   const [activeTab, setActiveTab] = useState("login");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    setError("");
+    setSuccess("");
 
-    setTimeout(() => {
-      console.log("Login attempt:", formData);
+    try {
+      const response = await fetch('/api/user/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setSuccess("Login successful! Redirecting...");
+        setTimeout(() => {
+          router.push('/');
+        }, 1000);
+      } else {
+        setError(data.message || "Login failed. Please try again.");
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("Connection error. Please try again.");
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    setError("");
+    setSuccess("");
 
-    // Redirect to /route/auth/register
-    router.push("/route/auth/register");
+    try {
+      const response = await fetch('/api/user/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setSuccess("Registration successful! Redirecting...");
+        setTimeout(() => {
+          router.push('/');
+        }, 1000);
+      } else {
+        setError(data.message || "Registration failed. Please try again.");
+      }
+    } catch (err) {
+      console.error("Registration error:", err);
+      setError("Connection error. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleInputChange = (field, value) => {
@@ -84,6 +143,18 @@ export default function LoginPage() {
                 </button>
               </div>
 
+              {/* Error/Success Messages */}
+              {error && (
+                <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+                  {error}
+                </div>
+              )}
+              {success && (
+                <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">
+                  {success}
+                </div>
+              )}
+
               {/* Login Form */}
               {activeTab === "login" && (
                 <form onSubmit={handleLogin} className="space-y-6">
@@ -120,8 +191,8 @@ export default function LoginPage() {
 
                   <button
                     type="submit"
-                    disabled={isLoading}
-                    className="w-full bg-gray-500 text-white py-4 px-6 rounded-lg font-semibold hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors duration-300 disabled:opacity-50"
+                    disabled={isLoading || !formData.email || !formData.password}
+                    className="w-full bg-gray-500 text-white py-4 px-6 rounded-lg font-semibold hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isLoading ? "LOGGING IN..." : "LOGIN"}
                   </button>
@@ -196,10 +267,10 @@ export default function LoginPage() {
 
                   <button
                     type="submit"
-                    disabled={isLoading}
-                    className="w-full bg-cyan-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-600 focus:ring-offset-2 transition-colors duration-300 disabled:opacity-50"
+                    disabled={isLoading || !formData.name || !formData.email || !formData.password}
+                    className="w-full bg-cyan-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-600 focus:ring-offset-2 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {isLoading ? "REDIRECTING..." : "REGISTER"}
+                    {isLoading ? "REGISTERING..." : "REGISTER"}
                   </button>
 
                   <div className="text-center text-gray-400 text-sm">or register with</div>
