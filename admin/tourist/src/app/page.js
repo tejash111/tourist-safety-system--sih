@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { io } from "socket.io-client";
 import { useState, useEffect } from "react";
-import { Bot, HelpCircle, IdCard, LogIn } from "lucide-react";
+import { Bot, HelpCircle, IdCard, LogIn, AlertTriangle, Shield, Phone } from "lucide-react";
 
 // Import Leaflet CSS dynamically
 import("leaflet/dist/leaflet.css");
@@ -45,6 +45,20 @@ const Home = () => {
   const [userLocations, setUserLocations] = useState({});
   const [chatOpen, setChatOpen] = useState(false);
   const [leafletIcon, setLeafletIcon] = useState(null);
+  const [safetyScore, setSafetyScore] = useState(100);
+  const [isInRiskZone, setIsInRiskZone] = useState(false);
+  const [emergencyContacts] = useState([
+    { name: "Police", number: "100" },
+    { name: "Emergency Services", number: "108" },
+    { name: "Tourist Helpline", number: "1363" }
+  ]);
+
+  // Risk zones data
+  const riskZones = [
+    { id: 1, name: "Forest Area", lat: 26.1445, lng: 91.7362, radius: 2000, risk: "high" },
+    { id: 2, name: "Remote Hills", lat: 26.1545, lng: 91.7462, radius: 1500, risk: "medium" },
+    { id: 3, name: "Border Area", lat: 26.1345, lng: 91.7262, radius: 3000, risk: "high" }
+  ];
 
   const router = useRouter();
 
@@ -63,6 +77,38 @@ const Home = () => {
     }
   }, []);
 
+  // Calculate safety score based on location
+  const calculateSafetyScore = (lat, lng) => {
+    let score = 100;
+    let inRiskZone = false;
+    
+    riskZones.forEach(zone => {
+      const distance = getDistance(lat, lng, zone.lat, zone.lng);
+      if (distance < zone.radius) {
+        inRiskZone = true;
+        score -= zone.risk === 'high' ? 40 : 20;
+      }
+    });
+    
+    setIsInRiskZone(inRiskZone);
+    return Math.max(score, 0);
+  };
+
+  const getDistance = (lat1, lng1, lat2, lng2) => {
+    const R = 6371e3; // Earth's radius in meters
+    const φ1 = lat1 * Math.PI / 180;
+    const φ2 = lat2 * Math.PI / 180;
+    const Δφ = (lat2 - lat1) * Math.PI / 180;
+    const Δλ = (lng2 - lng1) * Math.PI / 180;
+
+    const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+              Math.cos(φ1) * Math.cos(φ2) *
+              Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    return R * c;
+  };
+
   // Track my location
   useEffect(() => {
     if (navigator.geolocation) {
@@ -70,7 +116,12 @@ const Home = () => {
         (pos) => {
           const { latitude, longitude } = pos.coords;
           setPosition([latitude, longitude]);
-          socket.emit("send-location", { latitude, longitude });
+          
+          // Calculate safety score
+          const score = calculateSafetyScore(latitude, longitude);
+          setSafetyScore(score);
+          
+          socket.emit("send-location", { latitude, longitude, safetyScore: score });
         },
         (error) => console.error(error),
         { enableHighAccuracy: true, maximumAge: 0, timeout: 5000 }
@@ -79,6 +130,25 @@ const Home = () => {
       return () => navigator.geolocation.clearWatch(watcher);
     }
   }, []);
+
+  // Panic button handler
+  const handlePanicButton = () => {
+    if (position && confirm("Are you sure you want to send a panic alert? Emergency services will be notified immediately.")) {
+      const alertData = {
+        type: 'panic',
+        touristId: socket.id,
+        location: { lat: position[0], lng: position[1] },
+        timestamp: new Date().toISOString(),
+        status: 'active'
+      };
+      
+      // Send to backend
+      socket.emit("panic-alert", alertData);
+      
+      // Show confirmation
+      alert("Emergency alert sent! Help is on the way. Stay calm and stay where you are if safe.");
+    }
+  };
 
   // Socket listeners
   useEffect(() => {
@@ -118,26 +188,63 @@ const Home = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-100 via-cyan-50 to-blue-200">
       {/* Navbar */}
-      <nav className="w-full bg-white shadow-md px-6 py-4 flex items-center justify-between">
-        <h1 className="text-xl font-bold text-cyan-600">Travling!</h1>
-        <div className="flex gap-4">
-          <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-cyan-600 text-white font-medium hover:bg-cyan-700 transition">
-            <IdCard className="w-5 h-5" />
-            Aadhaar Verification
-          </button>
+      <nav className="w-full bg-white shadow-md px-6 py-4">
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-xl font-bold text-cyan-600">Travling!</h1>
+          <div className="flex gap-4">
+            <button 
+              onClick={() => router.push("/dashboard")}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition"
+            >
+              <Shield className="w-5 h-5" />
+              Dashboard
+            </button>
+            <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-cyan-600 text-white font-medium hover:bg-cyan-700 transition">
+              <IdCard className="w-5 h-5" />
+              Aadhaar Verification
+            </button>
+            <button
+              onClick={() => setChatOpen(!chatOpen)}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-600 text-white font-medium hover:bg-gray-700 transition"
+            >
+              <Bot className="w-5 h-5" />
+              Chatbot
+            </button>
+            <button
+              onClick={() => router.push("/auth")}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-600 text-white font-medium hover:bg-emerald-700 transition"
+            >
+              <LogIn className="w-5 h-5" />
+              Login / Register
+            </button>
+          </div>
+        </div>
+        
+        {/* Safety Status Bar */}
+        <div className="flex items-center justify-between bg-gray-50 rounded-lg px-4 py-3">
+          <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-2">
+              <Shield className={`w-5 h-5 ${safetyScore >= 70 ? 'text-green-600' : safetyScore >= 40 ? 'text-yellow-600' : 'text-red-600'}`} />
+              <span className="text-sm font-medium text-gray-700">Safety Score:</span>
+              <span className={`text-sm font-bold ${safetyScore >= 70 ? 'text-green-600' : safetyScore >= 40 ? 'text-yellow-600' : 'text-red-600'}`}>
+                {safetyScore}%
+              </span>
+            </div>
+            
+            {isInRiskZone && (
+              <div className="flex items-center space-x-2 text-orange-600">
+                <AlertTriangle className="w-5 h-5" />
+                <span className="text-sm font-medium">Risk Zone Alert</span>
+              </div>
+            )}
+          </div>
+          
           <button
-            onClick={() => setChatOpen(!chatOpen)}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-600 text-white font-medium hover:bg-gray-700 transition"
+            onClick={handlePanicButton}
+            className="flex items-center gap-2 px-6 py-2 rounded-lg bg-red-600 text-white font-medium hover:bg-red-700 transition transform hover:scale-105 shadow-lg"
           >
-            <Bot className="w-5 h-5" />
-            Chatbot
-          </button>
-          <button
-            onClick={() => router.push("/auth")}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-600 text-white font-medium hover:bg-emerald-700 transition"
-          >
-            <LogIn className="w-5 h-5" />
-            Login / Register
+            <AlertTriangle className="w-5 h-5" />
+            PANIC BUTTON
           </button>
         </div>
       </nav>
@@ -201,11 +308,36 @@ const Home = () => {
         </div>
       )}
 
+      {/* Emergency Contacts Floating Panel */}
+      <div className="fixed bottom-4 left-4 bg-white rounded-lg shadow-lg p-4 max-w-xs">
+        <h3 className="text-sm font-semibold text-gray-800 mb-2 flex items-center">
+          <Phone className="w-4 h-4 mr-2 text-red-600" />
+          Emergency Contacts
+        </h3>
+        <div className="space-y-2">
+          {emergencyContacts.map((contact, index) => (
+            <div key={index} className="flex items-center justify-between text-xs">
+              <span className="text-gray-600">{contact.name}</span>
+              <a 
+                href={`tel:${contact.number}`}
+                className="text-blue-600 font-medium hover:text-blue-800"
+              >
+                {contact.number}
+              </a>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Footer */}
       <footer className="bg-white shadow-inner py-4 text-center text-sm text-gray-500">
-        © 2025 Travling |{" "}
+        © 2025 Travling - Smart Tourist Safety System |{" "}
         <a href="#" className="text-cyan-600 hover:underline">
           Terms & Conditions
+        </a>
+        {" | "}
+        <a href="/dashboard" className="text-blue-600 hover:underline">
+          Tourism Department Dashboard
         </a>
       </footer>
     </div>

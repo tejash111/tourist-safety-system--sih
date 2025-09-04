@@ -22,11 +22,29 @@ app.use("/api/user/", useroutes);
 
 //socket
 io.on("connection", function (socket) {
+    console.log('User connected:', socket.id);
+    
     socket.on("send-location", function (data) {
         io.emit("receive-location", { id: socket.id, ...data });
     });
     
+    socket.on("panic-alert", function (alertData) {
+        console.log('Panic alert received:', alertData);
+        // Broadcast to all connected clients (including dashboards)
+        io.emit("panic-alert", {
+            ...alertData,
+            touristId: socket.id,
+            timestamp: new Date().toISOString()
+        });
+        
+        // Here you could also:
+        // - Save to database
+        // - Send SMS/email to authorities
+        // - Trigger automated emergency response
+    });
+    
     socket.on("disconnect", function () {
+        console.log('User disconnected:', socket.id);
         io.emit('user-disconnected', socket.id);
     });
 });
