@@ -44,23 +44,23 @@ function AuthenticatedTabs() {
         },
       })}
     >
-      <Tab.Screen 
-        name="Dashboard" 
+      <Tab.Screen
+        name="Dashboard"
         component={DashboardScreen}
         options={{ title: 'Tourist Safety Dashboard' }}
       />
-      <Tab.Screen 
-        name="Map" 
+      <Tab.Screen
+        name="Map"
         component={MapScreen}
         options={{ title: 'Live Location Map' }}
       />
-      <Tab.Screen 
-        name="Alerts" 
+      <Tab.Screen
+        name="Alerts"
         component={AlertsScreen}
         options={{ title: 'Safety Alerts' }}
       />
-      <Tab.Screen 
-        name="Profile" 
+      <Tab.Screen
+        name="Profile"
         component={ProfileScreen}
         options={{ title: 'Profile' }}
       />
@@ -92,7 +92,9 @@ export default function App() {
   return (
     <AuthProvider>
       <StatusBar style="light" backgroundColor="#1d4ed8" />
-      <AppNavigator />
+      <NavigationContainer>
+        <AppNavigator />
+      </NavigationContainer>
     </AuthProvider>
   );
 }

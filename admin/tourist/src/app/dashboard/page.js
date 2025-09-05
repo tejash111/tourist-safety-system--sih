@@ -22,9 +22,7 @@ import {
 import("leaflet/dist/leaflet.css");
 
 // Socket.io connection
-const socketUrl = process.env.NODE_ENV === 'production' 
-  ? `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co:3001`
-  : "http://localhost:3001";
+const socketUrl ="http://localhost:3001";
   
 const socket = io(socketUrl, {
   transports: ["websocket", "polling"],
@@ -277,68 +275,7 @@ function DashboardComponent() {
 
         {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Map */}
-          <div className="lg:col-span-2 bg-white rounded-lg shadow-sm">
-            <div className="p-4 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900">Real-time Tourist Tracking</h2>
-            </div>
-            <div className="p-4">
-              <div style={{ height: "500px", width: "100%" }}>
-                <MapContainer
-                  center={[26.1445, 91.7362]}
-                  zoom={12}
-                  style={{ height: "100%", width: "100%" }}
-                >
-                  <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  />
-                  
-                  {/* Risk Zones */}
-                  {riskZones.map(zone => (
-                    <Circle
-                      key={zone.id}
-                      center={[zone.lat, zone.lng]}
-                      radius={zone.radius}
-                      fillColor={getRiskZoneColor(zone.risk)}
-                      fillOpacity={0.3}
-                      color={getRiskZoneColor(zone.risk)}
-                      weight={2}
-                    />
-                  ))}
-                  
-                  {/* Tourist Markers */}
-                  {Object.values(tourists).map(tourist => (
-                    <Marker
-                      key={tourist.id}
-                      position={[tourist.latitude, tourist.longitude]}
-                      icon={leafletIcon}
-                      eventHandlers={{
-                        click: () => setSelectedTourist(tourist)
-                      }}
-                    >
-                      <Popup>
-                        <div className="p-2">
-                          <p className="font-semibold">Tourist ID: {tourist.id}</p>
-                          <p className="text-sm text-gray-600">
-                            Safety Score: <span className={getSafetyColor(tourist.safetyScore)}>
-                              {tourist.safetyScore}%
-                            </span>
-                          </p>
-                          <p className="text-sm text-gray-600">
-                            Status: <span className="capitalize">{tourist.status}</span>
-                          </p>
-                          <p className="text-sm text-gray-600">
-                            Last Seen: {new Date(tourist.lastSeen).toLocaleTimeString()}
-                          </p>
-                        </div>
-                      </Popup>
-                    </Marker>
-                  ))}
-                </MapContainer>
-              </div>
-            </div>
-          </div>
+         
 
           {/* Alerts Panel */}
           <div className="bg-white rounded-lg shadow-sm">
