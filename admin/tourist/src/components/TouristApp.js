@@ -66,43 +66,118 @@ const TouristApp = () => {
   const [heatmapZones, setHeatmapZones] = useState([]);
 
   // Generate random heatmap zones around user's location
-  const generateHeatmapZones = (userLat, userLng) => {
-    const zones = [];
-    const zoneTypes = [
-      { name: "Construction Site", risk: "high", color: "#dc2626", radius: 800, icon: "🚧" },
-      { name: "Dense Traffic Area", risk: "medium", color: "#ea580c", radius: 1200, icon: "🚗" },
-      { name: "Crowded Market", risk: "medium", color: "#ca8a04", radius: 600, icon: "🏪" },
-      { name: "Industrial Zone", risk: "high", color: "#dc2626", radius: 1500, icon: "🏭" },
-      { name: "Railway Crossing", risk: "high", color: "#dc2626", radius: 400, icon: "🚆" },
-      { name: "Bus Terminal", risk: "medium", color: "#ea580c", radius: 800, icon: "🚌" },
-      { name: "Dark Alley", risk: "high", color: "#dc2626", radius: 300, icon: "🌃" },
-      { name: "Tourist Hotspot", risk: "low", color: "#059669", radius: 1000, icon: "📸" },
-      { name: "Police Station", risk: "low", color: "#059669", radius: 500, icon: "👮" },
-      { name: "Hospital Zone", risk: "low", color: "#059669", radius: 700, icon: "🏥" },
-      { name: "Shopping Mall", risk: "low", color: "#059669", radius: 900, icon: "🛍️" },
-      { name: "Park Area", risk: "low", color: "#059669", radius: 1200, icon: "🌳" }
-    ];
+  // const generateHeatmapZones = (userLat, userLng) => {
+  //   const zones = [];
+  //   const zoneTypes = [
+  //     { name: "Construction Site", risk: "high", color: "#dc2626", radius: 800, icon: "🚧" },
+  //     { name: "Dense Traffic Area", risk: "medium", color: "#ea580c", radius: 1200, icon: "🚗" },
+  //     { name: "Crowded Market", risk: "medium", color: "#ca8a04", radius: 600, icon: "🏪" },
+  //     { name: "Industrial Zone", risk: "high", color: "#dc2626", radius: 1500, icon: "🏭" },
+  //     { name: "Railway Crossing", risk: "high", color: "#dc2626", radius: 400, icon: "🚆" },
+  //     { name: "Bus Terminal", risk: "medium", color: "#ea580c", radius: 800, icon: "🚌" },
+  //     { name: "Dark Alley", risk: "high", color: "#dc2626", radius: 300, icon: "🌃" },
+  //     { name: "Tourist Hotspot", risk: "low", color: "#059669", radius: 1000, icon: "📸" },
+  //     { name: "Police Station", risk: "low", color: "#059669", radius: 500, icon: "👮" },
+  //     { name: "Hospital Zone", risk: "low", color: "#059669", radius: 700, icon: "🏥" },
+  //     { name: "Shopping Mall", risk: "low", color: "#059669", radius: 900, icon: "🛍️" },
+  //     { name: "Park Area", risk: "low", color: "#059669", radius: 1200, icon: "🌳" }
+  //   ];
 
-    for (let i = 0; i < 10; i++) {
-      const angle = (i * 36) * (Math.PI / 180); // Distribute around circle
-      const distance = 0.005 + Math.random() * 0.015; // Random distance up to ~2km
-      const zoneType = zoneTypes[Math.floor(Math.random() * zoneTypes.length)];
+  //   for (let i = 0; i < 10; i++) {
+  //     const angle = (i * 36) * (Math.PI / 180); // Distribute around circle
+  //     const distance = 0.005 + Math.random() * 0.015; // Random distance up to ~2km
+  //     const zoneType = zoneTypes[Math.floor(Math.random() * zoneTypes.length)];
 
-      zones.push({
-        id: i + 1,
-        name: zoneType.name,
-        lat: userLat + distance * Math.cos(angle),
-        lng: userLng + distance * Math.sin(angle),
-        radius: zoneType.radius + Math.random() * 200,
-        risk: zoneType.risk,
-        color: zoneType.color,
-        icon: zoneType.icon,
-        intensity: zoneType.risk === 'high' ? 0.4 : zoneType.risk === 'medium' ? 0.25 : 0.15
-      });
-    }
+  //     zones.push({
+  //       id: i + 1,
+  //       name: zoneType.name,
+  //       lat: userLat + distance * Math.cos(angle),
+  //       lng: userLng + distance * Math.sin(angle),
+  //       radius: zoneType.radius + Math.random() * 200,
+  //       risk: zoneType.risk,
+  //       color: zoneType.color,
+  //       icon: zoneType.icon,
+  //       intensity: zoneType.risk === 'high' ? 0.4 : zoneType.risk === 'medium' ? 0.25 : 0.15
+  //     });
+  //   }
 
-    return zones;
+  //   return zones;
+  // };
+  // const generateHeatmapZones = (userLat, userLng) => {
+  // const zones = [];
+
+  // // Define types of zones
+  // const zoneTypes = [
+  //   { name: "Construction Site", risk: "high", color: "#dc2626", radius: 800, icon: "🚧" },
+  //   { name: "Dense Traffic Area", risk: "medium", color: "#ea580c", radius: 1200, icon: "🚗" },
+  //   { name: "Crowded Market", risk: "medium", color: "#ca8a04", radius: 600, icon: "🏪" },
+  //   { name: "Industrial Zone", risk: "high", color: "#dc2626", radius: 1500, icon: "🏭" },
+  //   { name: "Railway Crossing", risk: "high", color: "#dc2626", radius: 400, icon: "🚆" },
+  //   { name: "Bus Terminal", risk: "medium", color: "#ea580c", radius: 800, icon: "🚌" },
+  //   { name: "Dark Alley", risk: "high", color: "#dc2626", radius: 300, icon: "🌃" },
+  //   { name: "Tourist Hotspot", risk: "low", color: "#059669", radius: 1000, icon: "📸" },
+  //   { name: "Police Station", risk: "low", color: "#059669", radius: 500, icon: "👮" },
+  //   { name: "Hospital Zone", risk: "low", color: "#059669", radius: 700, icon: "🏥" },
+  //   { name: "Shopping Mall", risk: "low", color: "#059669", radius: 900, icon: "🛍️" },
+  //   { name: "Park Area", risk: "low", color: "#059669", radius: 1200, icon: "🌳" }
+  // ];
+
+ const generateHeatmapZones = (userLat, userLng) => {
+  const zones = [];
+
+  // ✅ Add user's current location
+  zones.push({
+    id: 0,
+    name: "You Are Here",
+    lat: userLat,
+    lng: userLng,
+    radius: 700,
+    risk: "low",
+    color: "#059669", // green
+    icon: "📍",
+    intensity: 0.1
+  });
+
+  // ✅ Add exactly one red zone (high risk), non-overlapping
+  const redZoneType = {
+    name: "Danger Zone",
+    risk: "high",
+    color: "#dc9626ff", // red
+    radius: 500,
+    icon: "⚠️"
   };
+
+  let redZoneLat, redZoneLng, distanceFromUser;
+  const minDistance = 0.01; // ~1km (in degrees)
+
+  // Try to generate a red zone that's at least 1km from user
+  do {
+    const angle = Math.random() * 2 * Math.PI;
+    const distance = 0.01 + Math.random() * 0.01; // between 1km and ~2km
+    const dx = distance * Math.cos(angle);
+    const dy = distance * Math.sin(angle);
+    redZoneLat = userLat + dy;
+    redZoneLng = userLng + dx;
+
+    // Calculate straight-line distance in degrees
+    distanceFromUser = Math.sqrt(Math.pow(redZoneLat - userLat, 2) + Math.pow(redZoneLng - userLng, 2));
+  } while (distanceFromUser < minDistance);
+
+  zones.push({
+    id: 1,
+    name: redZoneType.name,
+    lat: redZoneLat,
+    lng: redZoneLng,
+    radius: redZoneType.radius,
+    risk: redZoneType.risk,
+    color: redZoneType.color,
+    icon: redZoneType.icon,
+    intensity: 0.4
+  });
+
+  return zones;
+};
+
 
   const router = useRouter();
   const { user, logout } = useAuth();
@@ -202,7 +277,7 @@ const TouristApp = () => {
         <div class="flex items-center gap-3">
           <span class="text-2xl animate-bounce">${zone.icon}</span>
           <div>
-            <div class="font-bold text-lg">⚠️ RISK ZONE ALERT</div>
+            <div class="font-bold text-lg"> RISK ZONE ALERT</div>
             <div class="text-sm opacity-90">Entered: ${zone.name}</div>
             <div class="text-xs opacity-75 mt-1">Stay alert and follow safety protocols</div>
           </div>
@@ -326,7 +401,7 @@ const TouristApp = () => {
       return;
     }
 
-    if (confirm("🚨 EMERGENCY ALERT\n\nAre you sure you want to send a panic alert? This will immediately notify emergency services and nearby authorities of your location.\n\nClick OK to confirm or Cancel to abort.")) {
+    if (confirm(" EMERGENCY ALERT\n\nAre you sure you want to send a panic alert? This will immediately notify emergency services and nearby authorities of your location.\n\nClick OK to confirm or Cancel to abort.")) {
       const alertData = {
         type: 'panic',
         touristId: socket.id,
@@ -345,7 +420,7 @@ const TouristApp = () => {
       const confirmDiv = document.createElement('div');
       confirmDiv.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-red-600 text-white p-8 rounded-2xl shadow-2xl z-50 text-center max-w-md';
       confirmDiv.innerHTML = `
-        <div class="text-6xl mb-4">🚨</div>
+        <div class="text-6xl mb-4"></div>
         <div class="text-xl font-bold mb-2">EMERGENCY ALERT SENT!</div>
         <div class="text-sm opacity-90 mb-4">Help is on the way. Emergency services have been notified of your location.</div>
         <div class="text-xs opacity-75">Stay calm and remain in a safe location if possible.</div>
@@ -370,11 +445,11 @@ const TouristApp = () => {
 
       const msg = newMessage.toLowerCase();
       if (msg.includes('emergency') || msg.includes('help') || msg.includes('danger')) {
-        botResponse = "🚨 If this is an emergency, please use the red PANIC BUTTON immediately. For non-emergencies, I'm here to help guide you.";
+        botResponse = " If this is an emergency, please use the red PANIC BUTTON immediately. For non-emergencies, I'm here to help guide you.";
       } else if (msg.includes('location') || msg.includes('lost')) {
-        botResponse = "📍 Your current location is being tracked on the map. If you're lost, look for nearby landmarks or safe zones (shown in green).";
+        botResponse = " Your current location is being tracked on the map. If you're lost, look for nearby landmarks or safe zones (shown in green).";
       } else if (msg.includes('safe') || msg.includes('safety')) {
-        botResponse = `🛡️ Your current safety score is ${safetyScore}%. ${safetyScore >= 70 ? 'You\'re in a relatively safe area.' : 'Please be extra cautious and consider moving to a safer location.'}`;
+        botResponse = ` Your current safety score is ${safetyScore}%. ${safetyScore >= 70 ? 'You\'re in a relatively safe area.' : 'Please be extra cautious and consider moving to a safer location.'}`;
       } else if (msg.includes('contact') || msg.includes('phone')) {
         botResponse = "📞 Emergency contacts are available in the bottom-left panel. For immediate help: Police (100), Emergency Services (108), Tourist Helpline (1363).";
       }
