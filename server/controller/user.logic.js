@@ -8,7 +8,7 @@ const generateToken = (getId) => {
 };
 
 const RegisterUser = async (req, res, next) => {
-  const { name, email, password, image } = req.body;
+  const { name, email, password, image, aadharid } = req.body;
 
   try {
     const isUserExist = await User.findOne({ email });
@@ -23,13 +23,14 @@ const RegisterUser = async (req, res, next) => {
       const hashedPassword = await bcrypt.hash(password, 10); //10 is salt both in single line
 
 
-      const defaultimage = "https://www.shutterstock.com/image-vector/default-avatar-profile-social-media-260nw-1920331226.jpg";
+      const defaultimage = "https://i.pinimg.com/originals/65/1c/6d/651c6da502353948bdc929f02da2b8e0.jpg";
 
       const newlyCreatedUser = await User.create({
         name,
         email,
         password: hashedPassword,
-        image: image|| defaultimage,
+        image: image || defaultimage,
+        aadharid
       });
 
       if (newlyCreatedUser) {
