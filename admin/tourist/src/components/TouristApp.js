@@ -523,442 +523,442 @@ const TouristApp = () => {
   };
 
   // Loading state with better UX
-    if (!position && !locationError) {
-      return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-cyan-50 to-blue-100 flex items-center justify-center">
-          <div className="text-center bg-white p-8 rounded-2xl shadow-2xl max-w-md">
-            <div className="relative">
-              <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-200 border-t-blue-600 mx-auto mb-6"></div>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <Navigation className="w-6 h-6 text-blue-600" />
-              </div>
-            </div>
-            <h2 className="text-xl font-bold text-gray-800 mb-2">Getting Your Location</h2>
-            <p className="text-gray-600 mb-4">Please allow location access for the best experience</p>
-            <div className="flex items-center justify-center space-x-2 text-sm text-blue-600">
-              <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce"></div>
-              <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-              <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    // Error state
-    if (locationError && !position) {
-      return (
-        <div className="min-h-screen bg-gradient-to-br from-red-50 via-orange-50 to-red-100 flex items-center justify-center">
-          <div className="text-center bg-white p-8 rounded-2xl shadow-2xl max-w-md">
-            <AlertTriangle className="w-16 h-16 text-red-600 mx-auto mb-4" />
-            <h2 className="text-xl font-bold text-gray-800 mb-2">Location Error</h2>
-            <p className="text-gray-600 mb-4">{locationError}</p>
-            <button
-              onClick={() => window.location.reload()}
-              className="bg-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition"
-            >
-              Try Again
-            </button>
-          </div>
-        </div>
-      );
-    }
-
+  if (!position && !locationError) {
     return (
-      <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
-        {/* Enhanced Navbar */}
-        <nav className="w-full bg-white/95 backdrop-blur-sm shadow-xl px-6 py-4 sticky top-0 z-40">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-cyan-600 rounded-lg flex items-center justify-center">
-                  <MapPin className="w-5 h-5 text-white" />
-                </div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-                  Travling!
-                </h1>
-              </div>
-              {user && (
-                <div className="hidden md:flex items-center space-x-2 bg-blue-50 px-3 py-1 rounded-full">
-                  <IdCard className="w-4 h-4 text-blue-600" />
-                  <span className="text-sm text-blue-800">
-                    Welcome, <span className="font-semibold">{user.name}</span>
-                  </span>
-                </div>
-              )}
-            </div>
-            <div className="flex gap-3">
-              <button
-                onClick={() => router.push("/dashboard")}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold hover:from-blue-700 hover:to-blue-800 transition-all transform hover:scale-105 shadow-lg"
-              >
-                <Users className="w-5 h-5" />
-                <span className="hidden md:inline">Tourist List</span>
-              </button>
-              <button
-                onClick={() => setChatOpen(!chatOpen)}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-700 text-white font-semibold hover:from-emerald-700 hover:to-emerald-800 transition-all transform hover:scale-105 shadow-lg"
-              >
-                <Bot className="w-5 h-5" />
-                <span className="hidden md:inline">AI Assistant</span>
-              </button>
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold hover:from-red-700 hover:to-red-800 transition-all transform hover:scale-105 shadow-lg"
-              >
-                <LogOut className="w-5 h-5" />
-                <span className="hidden md:inline">Logout</span>
-              </button>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-cyan-50 to-blue-100 flex items-center justify-center">
+        <div className="text-center bg-white p-8 rounded-2xl shadow-2xl max-w-md">
+          <div className="relative">
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-200 border-t-blue-600 mx-auto mb-6"></div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Navigation className="w-6 h-6 text-blue-600" />
             </div>
           </div>
+          <h2 className="text-xl font-bold text-gray-800 mb-2">Getting Your Location</h2>
+          <p className="text-gray-600 mb-4">Please allow location access for the best experience</p>
+          <div className="flex items-center justify-center space-x-2 text-sm text-blue-600">
+            <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce"></div>
+            <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+            <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-          {/* Enhanced Safety Status Bar */}
-          <div className="flex items-center justify-between bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl px-6 py-4 border border-gray-200">
-            <div className="flex items-center space-x-8">
-              <div className="flex items-center space-x-3">
-                <div className={`p-2 rounded-full ${safetyScore >= 70 ? 'bg-green-100' : safetyScore >= 40 ? 'bg-yellow-100' : 'bg-red-100'}`}>
-                  <Shield className={`w-6 h-6 ${safetyScore >= 70 ? 'text-green-600' : safetyScore >= 40 ? 'text-yellow-600' : 'text-red-600'}`} />
-                </div>
-                <div>
-                  <div className="text-sm font-medium text-gray-700">Safety Score</div>
-                  <div className={`text-2xl font-bold ${safetyScore >= 70 ? 'text-green-600' : safetyScore >= 40 ? 'text-yellow-600' : 'text-red-600'}`}>
-                    {safetyScore}%
-                  </div>
-                </div>
+  // Error state
+  if (locationError && !position) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-red-50 via-orange-50 to-red-100 flex items-center justify-center">
+        <div className="text-center bg-white p-8 rounded-2xl shadow-2xl max-w-md">
+          <AlertTriangle className="w-16 h-16 text-red-600 mx-auto mb-4" />
+          <h2 className="text-xl font-bold text-gray-800 mb-2">Location Error</h2>
+          <p className="text-gray-600 mb-4">{locationError}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="bg-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+      {/* Enhanced Navbar */}
+      <nav className="w-full bg-white/95 backdrop-blur-sm shadow-xl px-6 py-4 sticky top-0 z-40">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-cyan-600 rounded-lg flex items-center justify-center">
+                <MapPin className="w-5 h-5 text-white" />
               </div>
-
-              {lastUpdated && (
-                <div className="hidden md:flex items-center space-x-2 text-gray-600">
-                  <Activity className="w-4 h-4" />
-                  <div className="text-xs">
-                    <div>Last Updated</div>
-                    <div className="font-mono">{lastUpdated.toLocaleTimeString()}</div>
-                  </div>
-                </div>
-              )}
-
-              {isInRiskZone && (
-                <div className="flex items-center space-x-2 bg-orange-100 px-3 py-2 rounded-full">
-                  <AlertTriangle className="w-5 h-5 text-orange-600 animate-pulse" />
-                  <span className="text-sm font-semibold text-orange-700">Risk Zone Alert</span>
-                </div>
-              )}
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+                Travling!
+              </h1>
             </div>
-
+            {user && (
+              <div className="hidden md:flex items-center space-x-2 bg-blue-50 px-3 py-1 rounded-full">
+                <IdCard className="w-4 h-4 text-blue-600" />
+                <span className="text-sm text-blue-800">
+                  Welcome, <span className="font-semibold">{user.name}</span>
+                </span>
+              </div>
+            )}
+          </div>
+          <div className="flex gap-3">
             <button
-              onClick={handlePanicButton}
-              className="flex items-center gap-3 px-8 py-3 rounded-xl bg-gradient-to-r from-red-600 to-red-700 text-white font-bold hover:from-red-700 hover:to-red-800 transition-all transform hover:scale-105 shadow-2xl animate-pulse"
+              onClick={() => router.push("/dashboard")}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold hover:from-blue-700 hover:to-blue-800 transition-all transform hover:scale-105 shadow-lg"
             >
-              <AlertTriangle className="w-6 h-6" />
-              <span className="text-lg">🚨 PANIC BUTTON</span>
+              <Users className="w-5 h-5" />
+              <span className="hidden md:inline">Tourist List</span>
+            </button>
+            <button
+              onClick={() => setChatOpen(!chatOpen)}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-700 text-white font-semibold hover:from-emerald-700 hover:to-emerald-800 transition-all transform hover:scale-105 shadow-lg"
+            >
+              <Bot className="w-5 h-5" />
+              <span className="hidden md:inline">AI Assistant</span>
+            </button>
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold hover:from-red-700 hover:to-red-800 transition-all transform hover:scale-105 shadow-lg"
+            >
+              <LogOut className="w-5 h-5" />
+              <span className="hidden md:inline">Logout</span>
             </button>
           </div>
-        </nav>
+        </div>
 
-        {/* Enhanced Dashboard Content */}
-        <main className="flex-1 p-6 space-y-8">
-          {/* Enhanced Stats Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-green-200 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-20 h-20 bg-green-100 rounded-full -mr-10 -mt-10 opacity-50"></div>
-              <div className="relative flex items-center">
-                <div className="p-3 bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg">
-                  <Shield className="h-8 w-8 text-white" />
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm font-semibold text-gray-600">Safety Score</p>
-                  <p className="text-3xl font-bold text-gray-900">{safetyScore}%</p>
+        {/* Enhanced Safety Status Bar */}
+        <div className="flex items-center justify-between bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl px-6 py-4 border border-gray-200">
+          <div className="flex items-center space-x-8">
+            <div className="flex items-center space-x-3">
+              <div className={`p-2 rounded-full ${safetyScore >= 70 ? 'bg-green-100' : safetyScore >= 40 ? 'bg-yellow-100' : 'bg-red-100'}`}>
+                <Shield className={`w-6 h-6 ${safetyScore >= 70 ? 'text-green-600' : safetyScore >= 40 ? 'text-yellow-600' : 'text-red-600'}`} />
+              </div>
+              <div>
+                <div className="text-sm font-medium text-gray-700">Safety Score</div>
+                <div className={`text-2xl font-bold ${safetyScore >= 70 ? 'text-green-600' : safetyScore >= 40 ? 'text-yellow-600' : 'text-red-600'}`}>
+                  {safetyScore}%
                 </div>
               </div>
             </div>
 
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-blue-200 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-20 h-20 bg-blue-100 rounded-full -mr-10 -mt-10 opacity-50"></div>
-              <div className="relative flex items-center">
-                <div className="p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg">
-                  <MapPin className="h-8 w-8 text-white" />
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm font-semibold text-gray-600">Risk Zones</p>
-                  <p className="text-3xl font-bold text-gray-900">{heatmapZones.length}</p>
+            {lastUpdated && (
+              <div className="hidden md:flex items-center space-x-2 text-gray-600">
+                <Activity className="w-4 h-4" />
+                <div className="text-xs">
+                  <div>Last Updated</div>
+                  <div className="font-mono">{lastUpdated.toLocaleTimeString()}</div>
                 </div>
               </div>
-            </div>
+            )}
 
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-yellow-200 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-20 h-20 bg-yellow-100 rounded-full -mr-10 -mt-10 opacity-50"></div>
-              <div className="relative flex items-center">
-                <div className="p-3 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl shadow-lg">
-                  <AlertTriangle className="h-8 w-8 text-white" />
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm font-semibold text-gray-600">High Risk</p>
-                  <p className="text-3xl font-bold text-gray-900">{heatmapZones.filter(z => z.risk === 'high').length}</p>
-                </div>
+            {isInRiskZone && (
+              <div className="flex items-center space-x-2 bg-orange-100 px-3 py-2 rounded-full">
+                <AlertTriangle className="w-5 h-5 text-orange-600 animate-pulse" />
+                <span className="text-sm font-semibold text-orange-700">Risk Zone Alert</span>
               </div>
-            </div>
+            )}
+          </div>
 
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-purple-200 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-20 h-20 bg-purple-100 rounded-full -mr-10 -mt-10 opacity-50"></div>
-              <div className="relative flex items-center">
-                <div className="p-3 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg">
-                  <Users className="h-8 w-8 text-white" />
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm font-semibold text-gray-600">Nearby Users</p>
-                  <p className="text-3xl font-bold text-gray-900">{Object.keys(userLocations).length}</p>
-                </div>
+          <button
+            onClick={handlePanicButton}
+            className="flex items-center gap-3 px-8 py-3 rounded-xl bg-gradient-to-r from-red-600 to-red-700 text-white font-bold hover:from-red-700 hover:to-red-800 transition-all transform hover:scale-105 shadow-2xl animate-pulse"
+          >
+            <AlertTriangle className="w-6 h-6" />
+            <span className="text-lg">🚨 PANIC BUTTON</span>
+          </button>
+        </div>
+      </nav>
+
+      {/* Enhanced Dashboard Content */}
+      <main className="flex-1 p-6 space-y-8">
+        {/* Enhanced Stats Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-green-200 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-20 h-20 bg-green-100 rounded-full -mr-10 -mt-10 opacity-50"></div>
+            <div className="relative flex items-center">
+              <div className="p-3 bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg">
+                <Shield className="h-8 w-8 text-white" />
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-semibold text-gray-600">Safety Score</p>
+                <p className="text-3xl font-bold text-gray-900">{safetyScore}%</p>
               </div>
             </div>
           </div>
 
-          {/* Enhanced Map Container */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Main Map */}
-            <div className="lg:col-span-2 bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden border border-gray-200">
-              <div className="h-96 md:h-[500px] w-full relative">
-                {position && (
-                  <MapContainer
-                    center={position}
-                    zoom={15}
-                    className="h-full w-full rounded-2xl"
-                    zoomControl={true}
-                  >
-                    <TileLayer
-                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    />
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-blue-200 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-20 h-20 bg-blue-100 rounded-full -mr-10 -mt-10 opacity-50"></div>
+            <div className="relative flex items-center">
+              <div className="p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg">
+                <MapPin className="h-8 w-8 text-white" />
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-semibold text-gray-600">Risk Zones</p>
+                <p className="text-3xl font-bold text-gray-900">{heatmapZones.length}</p>
+              </div>
+            </div>
+          </div>
 
-                    {/* User's current location */}
-                    <Marker position={position} icon={userLocationIcon}>
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-yellow-200 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-20 h-20 bg-yellow-100 rounded-full -mr-10 -mt-10 opacity-50"></div>
+            <div className="relative flex items-center">
+              <div className="p-3 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl shadow-lg">
+                <AlertTriangle className="h-8 w-8 text-white" />
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-semibold text-gray-600">High Risk</p>
+                <p className="text-3xl font-bold text-gray-900">{heatmapZones.filter(z => z.risk === 'high').length}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-purple-200 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-20 h-20 bg-purple-100 rounded-full -mr-10 -mt-10 opacity-50"></div>
+            <div className="relative flex items-center">
+              <div className="p-3 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg">
+                <Users className="h-8 w-8 text-white" />
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-semibold text-gray-600">Nearby Users</p>
+                <p className="text-3xl font-bold text-gray-900">{Object.keys(userLocations).length}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Enhanced Map Container */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Map */}
+          <div className="lg:col-span-2 bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden border border-gray-200">
+            <div className="h-96 md:h-[500px] w-full relative">
+              {position && (
+                <MapContainer
+                  center={position}
+                  zoom={15}
+                  className="h-full w-full rounded-2xl"
+                  zoomControl={true}
+                >
+                  <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  />
+
+                  {/* User's current location */}
+                  <Marker position={position} icon={userLocationIcon}>
+                    <Popup>
+                      <div className="text-center">
+                        <div className="font-bold text-blue-600">Your Location</div>
+                        <div className="text-sm text-gray-600">
+                          Accuracy: {locationAccuracy ? `${Math.round(locationAccuracy)}m` : 'Unknown'}
+                        </div>
+                        <div className="text-xs text-gray-500">
+                          {new Date().toLocaleTimeString()}
+                        </div>
+                      </div>
+                    </Popup>
+                  </Marker>
+
+                  {/* Other users' locations */}
+                  {Object.values(userLocations).map((userLoc) => (
+                    <Marker
+                      key={userLoc.id}
+                      position={[userLoc.latitude, userLoc.longitude]}
+                      icon={leafletIcon}
+                    >
                       <Popup>
                         <div className="text-center">
-                          <div className="font-bold text-blue-600">Your Location</div>
+                          <div className="font-semibold">Tourist #{userLoc.id.slice(-4)}</div>
                           <div className="text-sm text-gray-600">
-                            Accuracy: {locationAccuracy ? `${Math.round(locationAccuracy)}m` : 'Unknown'}
-                          </div>
-                          <div className="text-xs text-gray-500">
-                            {new Date().toLocaleTimeString()}
+                            Safety: {userLoc.safetyScore}%
                           </div>
                         </div>
                       </Popup>
                     </Marker>
+                  ))}
 
-                    {/* Other users' locations */}
-                    {Object.values(userLocations).map((userLoc) => (
-                      <Marker
-                        key={userLoc.id}
-                        position={[userLoc.latitude, userLoc.longitude]}
-                        icon={leafletIcon}
-                      >
-                        <Popup>
-                          <div className="text-center">
-                            <div className="font-semibold">Tourist #{userLoc.id.slice(-4)}</div>
-                            <div className="text-sm text-gray-600">
-                              Safety: {userLoc.safetyScore}%
-                            </div>
-                          </div>
-                        </Popup>
-                      </Marker>
-                    ))}
-
-                    {/* Heatmap zones */}
-                    {heatmapZones.map((zone) => (
-                      <Circle
-                        key={zone.id}
-                        center={[zone.lat, zone.lng]}
-                        radius={zone.radius}
-                        pathOptions={{
-                          color: zone.color,
-                          fillColor: zone.color,
-                          fillOpacity: zone.intensity,
-                          weight: 2,
-                        }}
-                      >
-                        <Popup>
-                          <div className="text-center">
-                            <div className="text-2xl mb-1">{zone.icon}</div>
-                            <div className={`font-bold ${zone.risk === 'high' ? 'text-red-600' :
-                                zone.risk === 'medium' ? 'text-orange-600' : 'text-green-600'
-                              }`}>
-                              {zone.name}
-                            </div>
-                            <div className="text-sm text-gray-600 capitalize">
-                              {zone.risk} risk area
-                            </div>
-                            <div className="text-xs text-gray-500">
-                              Radius: {Math.round(zone.radius)}m
-                            </div>
-                          </div>
-                        </Popup>
-                      </Circle>
-                    ))}
-                  </MapContainer>
-                )}
-              </div>
-            </div>
-
-            {/* Enhanced Sidebar */}
-            <div className="space-y-6">
-              {/* Emergency Contacts Card */}
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-red-200">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
-                    <Phone className="w-5 h-5 text-red-600" />
-                    Emergency Contacts
-                  </h3>
-                  <HelpCircle className="w-5 h-5 text-gray-400" />
-                </div>
-                <div className="space-y-3">
-                  {emergencyContacts.map((contact, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between p-3 bg-red-50 rounded-lg hover:bg-red-100 transition cursor-pointer"
-                      onClick={() => {
-                        if (typeof window !== 'undefined') {
-                          window.open(`tel:${contact.number}`, '_self');
-                        }
+                  {/* Heatmap zones */}
+                  {heatmapZones.map((zone) => (
+                    <Circle
+                      key={zone.id}
+                      center={[zone.lat, zone.lng]}
+                      radius={zone.radius}
+                      pathOptions={{
+                        color: zone.color,
+                        fillColor: zone.color,
+                        fillOpacity: zone.intensity,
+                        weight: 2,
                       }}
                     >
-                      <span className="font-medium text-gray-800">{contact.name}</span>
-                      <span className="bg-red-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                        {contact.number}
-                      </span>
-                    </div>
+                      <Popup>
+                        <div className="text-center">
+                          <div className="text-2xl mb-1">{zone.icon}</div>
+                          <div className={`font-bold ${zone.risk === 'high' ? 'text-red-600' :
+                            zone.risk === 'medium' ? 'text-orange-600' : 'text-green-600'
+                            }`}>
+                            {zone.name}
+                          </div>
+                          <div className="text-sm text-gray-600 capitalize">
+                            {zone.risk} risk area
+                          </div>
+                          <div className="text-xs text-gray-500">
+                            Radius: {Math.round(zone.radius)}m
+                          </div>
+                        </div>
+                      </Popup>
+                    </Circle>
                   ))}
-                </div>
-              </div>
+                </MapContainer>
+              )}
+            </div>
+          </div>
 
-              {/* Location Info Card */}
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-blue-200">
-                <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-                  <Navigation className="w-5 h-5 text-blue-600" />
-                  Location Details
+          {/* Enhanced Sidebar */}
+          <div className="space-y-6">
+            {/* Emergency Contacts Card */}
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-red-200">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+                  <Phone className="w-5 h-5 text-red-600" />
+                  Emergency Contacts
                 </h3>
-                {position && (
-                  <div className="space-y-3 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Latitude:</span>
-                      <span className="font-mono text-gray-800">{position[0].toFixed(6)}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Longitude:</span>
-                      <span className="font-mono text-gray-800">{position[1].toFixed(6)}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Accuracy:</span>
-                      <span className="font-mono text-gray-800">
-                        {locationAccuracy ? `${Math.round(locationAccuracy)} meters` : 'Unknown'}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Last Updated:</span>
-                      <span className="font-mono text-gray-800">
-                        {lastUpdated ? lastUpdated.toLocaleTimeString() : 'Never'}
-                      </span>
-                    </div>
+                <HelpCircle className="w-5 h-5 text-gray-400" />
+              </div>
+              <div className="space-y-3">
+                {emergencyContacts.map((contact, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between p-3 bg-red-50 rounded-lg hover:bg-red-100 transition cursor-pointer"
+                    onClick={() => {
+                      if (typeof window !== 'undefined') {
+                        window.open(`tel:${contact.number}`, '_self');
+                      }
+                    }}
+                  >
+                    <span className="font-medium text-gray-800">{contact.name}</span>
+                    <span className="bg-red-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                      {contact.number}
+                    </span>
                   </div>
-                )}
+                ))}
               </div>
+            </div>
 
-              {/* Safety Tips Card */}
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-green-200">
-                <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-                  <Shield className="w-5 h-5 text-green-600" />
-                  Safety Tips
-                </h3>
+            {/* Location Info Card */}
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-blue-200">
+              <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <Navigation className="w-5 h-5 text-blue-600" />
+                Location Details
+              </h3>
+              {position && (
                 <div className="space-y-3 text-sm">
-                  <div className="flex items-start gap-2 p-3 bg-green-50 rounded-lg">
-                    <div className="w-6 h-6 bg-green-600 text-white rounded-full flex items-center justify-center text-xs mt-0.5 flex-shrink-0">
-                      1
-                    </div>
-                    <span>Stay in well-lit areas with people around</span>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Latitude:</span>
+                    <span className="font-mono text-gray-800">{position[0].toFixed(6)}</span>
                   </div>
-                  <div className="flex items-start gap-2 p-3 bg-yellow-50 rounded-lg">
-                    <div className="w-6 h-6 bg-yellow-600 text-white rounded-full flex items-center justify-center text-xs mt-0.5 flex-shrink-0">
-                      2
-                    </div>
-                    <span>Avoid isolated or high-risk zones shown in red</span>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Longitude:</span>
+                    <span className="font-mono text-gray-800">{position[1].toFixed(6)}</span>
                   </div>
-                  <div className="flex items-start gap-2 p-3 bg-blue-50 rounded-lg">
-                    <div className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs mt-0.5 flex-shrink-0">
-                      3
-                    </div>
-                    <span>Keep emergency contacts readily accessible</span>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Accuracy:</span>
+                    <span className="font-mono text-gray-800">
+                      {locationAccuracy ? `${Math.round(locationAccuracy)} meters` : 'Unknown'}
+                    </span>
                   </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Last Updated:</span>
+                    <span className="font-mono text-gray-800">
+                      {lastUpdated ? lastUpdated.toLocaleTimeString() : 'Never'}
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Safety Tips Card */}
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-green-200">
+              <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <Shield className="w-5 h-5 text-green-600" />
+                Safety Tips
+              </h3>
+              <div className="space-y-3 text-sm">
+                <div className="flex items-start gap-2 p-3 bg-green-50 rounded-lg">
+                  <div className="w-6 h-6 bg-green-600 text-white rounded-full flex items-center justify-center text-xs mt-0.5 flex-shrink-0">
+                    1
+                  </div>
+                  <span>Stay in well-lit areas with people around</span>
+                </div>
+                <div className="flex items-start gap-2 p-3 bg-yellow-50 rounded-lg">
+                  <div className="w-6 h-6 bg-yellow-600 text-white rounded-full flex items-center justify-center text-xs mt-0.5 flex-shrink-0">
+                    2
+                  </div>
+                  <span>Avoid isolated or high-risk zones shown in red</span>
+                </div>
+                <div className="flex items-start gap-2 p-3 bg-blue-50 rounded-lg">
+                  <div className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs mt-0.5 flex-shrink-0">
+                    3
+                  </div>
+                  <span>Keep emergency contacts readily accessible</span>
                 </div>
               </div>
             </div>
           </div>
-        </main>
+        </div>
+      </main>
 
-        {/* Enhanced Chatbot Modal */}
-        {chatOpen && (
-          <div className="fixed bottom-6 right-6 w-96 bg-white rounded-2xl shadow-2xl border border-gray-200 z-50 overflow-hidden">
-            <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white p-4 flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <Bot className="w-6 h-6" />
-                <h3 className="font-semibold">Travel Assistant</h3>
-              </div>
-              <button
-                onClick={() => setChatOpen(false)}
-                className="text-white hover:text-emerald-200 transition"
+      {/* Enhanced Chatbot Modal */}
+      {chatOpen && (
+        <div className="fixed bottom-6 right-6 w-96 bg-white rounded-2xl shadow-2xl border border-gray-200 z-50 overflow-hidden">
+          <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white p-4 flex justify-between items-center">
+            <div className="flex items-center gap-2">
+              <Bot className="w-6 h-6" />
+              <h3 className="font-semibold">Travel Assistant</h3>
+            </div>
+            <button
+              onClick={() => setChatOpen(false)}
+              className="text-white hover:text-emerald-200 transition"
+            >
+              ×
+            </button>
+          </div>
+
+          <div className="h-80 overflow-y-auto p-4 bg-gray-50 space-y-3">
+            {chatMessages.map((msg, index) => (
+              <div
+                key={index}
+                className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}
               >
-                ×
+                <div
+                  className={`max-w-xs p-3 rounded-2xl ${msg.type === 'user'
+                    ? 'bg-emerald-600 text-white rounded-br-none'
+                    : 'bg-white text-gray-800 border border-gray-200 rounded-bl-none'
+                    }`}
+                >
+                  {msg.text}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="p-4 border-t border-gray-200 bg-white">
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                placeholder="Ask for help or information..."
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              />
+              <button
+                onClick={handleSendMessage}
+                disabled={!newMessage.trim()}
+                className="bg-emerald-600 text-white p-2 rounded-full hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+              >
+                <Send className="w-5 h-5" />
               </button>
             </div>
-
-            <div className="h-80 overflow-y-auto p-4 bg-gray-50 space-y-3">
-              {chatMessages.map((msg, index) => (
-                <div
-                  key={index}
-                  className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}
-                >
-                  <div
-                    className={`max-w-xs p-3 rounded-2xl ${msg.type === 'user'
-                        ? 'bg-emerald-600 text-white rounded-br-none'
-                        : 'bg-white text-gray-800 border border-gray-200 rounded-bl-none'
-                      }`}
-                  >
-                    {msg.text}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="p-4 border-t border-gray-200 bg-white">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                  placeholder="Ask for help or information..."
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
-                <button
-                  onClick={handleSendMessage}
-                  disabled={!newMessage.trim()}
-                  className="bg-emerald-600 text-white p-2 rounded-full hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
-                >
-                  <Send className="w-5 h-5" />
-                </button>
-              </div>
-            </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* Floating Chat Button */}
-        {!chatOpen && (
-          <button
-            onClick={() => setChatOpen(true)}
-            className="fixed bottom-6 right-6 w-14 h-14 bg-emerald-600 text-white rounded-full flex items-center justify-center shadow-2xl hover:bg-emerald-700 transition transform hover:scale-110 z-40"
-          >
-            <Bot className="w-6 h-6" />
-          </button>
-        )}
-      </div>
-    );
-  };
+      {/* Floating Chat Button */}
+      {!chatOpen && (
+        <button
+          onClick={() => setChatOpen(true)}
+          className="fixed bottom-6 right-6 w-14 h-14 bg-emerald-600 text-white rounded-full flex items-center justify-center shadow-2xl hover:bg-emerald-700 transition transform hover:scale-110 z-40"
+        >
+          <Bot className="w-6 h-6" />
+        </button>
+      )}
+    </div>
+  );
+};
 
-  export default TouristApp;
+export default TouristApp;
