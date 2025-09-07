@@ -8,7 +8,7 @@ const generateToken = (getId) => {
 };
 
 const RegisterUser = async (req, res, next) => {
-  const { name, email, password, image, aadharid } = req.body;
+  const { name, email, password, image, aadhar,profilePic } = req.body;
 
   try {
     const isUserExist = await User.findOne({ email });
@@ -30,7 +30,8 @@ const RegisterUser = async (req, res, next) => {
         email,
         password: hashedPassword,
         image: image || defaultimage,
-        aadharid
+        aadhar,
+        profilePic
       });
 
       if (newlyCreatedUser) {

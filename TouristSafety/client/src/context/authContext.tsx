@@ -1,8 +1,25 @@
-import { createContext, useContext, useState, useEffect } from 'react';
-import ReactDOM from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
+// src/context/AuthContext.tsx
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const AuthContext = createContext();
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  profilePic?: string;
+}
+
+interface AuthContextType {
+  user: User | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  login: (email: string, password: string) => Promise<{ success: boolean; message: string }>;
+  register: (name: string, email: string, password: string, profilePic?: string) => Promise<{ success: boolean; message: string }>;
+  logout: () => Promise<void>;
+  checkAuthStatus: () => Promise<void>;
+}
+
+const AuthContext = createContext<AuthContextType | null>(null);
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -12,12 +29,16 @@ export const useAuth = () => {
   return context;
 };
 
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+export const AuthProvider = ({ children }: AuthProviderProps) => {
+  const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate();
 
-  // Check authentication status on mount and route changes
   useEffect(() => {
     checkAuthStatus();
   }, []);
@@ -43,7 +64,7 @@ export const AuthProvider = ({ children }) => {
         setIsAuthenticated(false);
       }
     } catch (error) {
-      console.log('Auth check failed:', error);
+      console.error('Auth check failed:', error);
       setUser(null);
       setIsAuthenticated(false);
     } finally {
@@ -51,21 +72,18 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const login = async (email, password) => {
+  const login = async (email: string, password: string) => {
     try {
       const response = await fetch('/api/user/login', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
-
       if (data.success) {
-        await checkAuthStatus(); // Refresh user data
+        await checkAuthStatus();
         return { success: true, message: data.message };
       } else {
         return { success: false, message: data.message };
@@ -75,21 +93,18 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const register = async (name, email, password) => {
+  const register = async (name: string, email: string, password: string, profilePic?: string) => {
     try {
       const response = await fetch('/api/user/register', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ name, email, password, profilePic }),
       });
 
       const data = await response.json();
-
       if (data.success) {
-        await checkAuthStatus(); // Refresh user data
+        await checkAuthStatus();
         return { success: true, message: data.message };
       } else {
         return { success: false, message: data.message };
@@ -101,20 +116,17 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await fetch('/api/user/logout', {
-        method: 'POST',
-        credentials: 'include',
-      });
+      await fetch('/api/user/logout', { method: 'POST', credentials: 'include' });
     } catch (error) {
-      console.log('Logout error:', error);
+      console.error('Logout error:', error);
     } finally {
       setUser(null);
       setIsAuthenticated(false);
-      navigte
+      navigate('/login'); // redirect to login page
     }
   };
 
-  const value = {
+  const value: AuthContextType = {
     user,
     isAuthenticated,
     isLoading,
@@ -124,9 +136,5 @@ export const AuthProvider = ({ children }) => {
     checkAuthStatus,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
