@@ -1,52 +1,81 @@
-import React, { ChangeEvent, useState } from 'react';
-import { Eye, EyeOff, Shield, MapPin, AlertTriangle, Mail, Lock, User, Phone, ArrowRight, User2 } from 'lucide-react';
+import React, { ChangeEvent, FormEvent, useState } from "react";
+import {
+  Eye,
+  EyeOff,
+  Mail,
+  Lock,
+  User,
+  Phone,
+  ArrowRight,
+  User2,
+} from "lucide-react";
 import axios from "axios";
+import { useAuth } from "@/context/authContext";
+import { useNavigate } from "react-router-dom";
 
-// SignIn Component
+
+// -------------------- SignIn Component --------------------
 interface SignInProps {
   onToggle: () => void;
   loading: boolean;
   setLoading: (loading: boolean) => void;
 }
 
-export const SignIn: React.FC<SignInProps> = ({ onToggle, loading, setLoading }) => {
+export const SignIn: React.FC<SignInProps> = ({
+  onToggle,
+  loading,
+  setLoading,
+}) => {
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
+    email: "",
+    password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+   const { login } = useAuth();
+   const navigate=useNavigate()
+
+  
+const handleLogin = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  const result = await login(formData.email, formData.password);
+
+  if (result.success) {
+    setTimeout(() => {
+      navigate("/"); 
+    }, 1000);
+  } else {
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    console.log('Sign In Data:', formData);
-    setLoading(false);
-  };
+  }
+
+};
 
   return (
     <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6">
       <div className="text-center mb-6">
         <h2 className="text-2xl font-bold text-gray-800 mb-2">Welcome Back</h2>
-        <p className="text-gray-600 text-sm">Sign in to continue your safe journey</p>
+        <p className="text-gray-600 text-sm">
+          Sign in to continue your safe journey
+        </p>
       </div>
 
       <div className="space-y-4">
         {/* Email Field */}
         <div>
-          <label htmlFor="signin-email" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="signin-email"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Email Address
           </label>
           <div className="relative">
-            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="email"
               id="signin-email"
@@ -62,13 +91,16 @@ export const SignIn: React.FC<SignInProps> = ({ onToggle, loading, setLoading })
 
         {/* Password Field */}
         <div>
-          <label htmlFor="signin-password" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="signin-password"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Password
           </label>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
-              type={showPassword ? 'text' : 'password'}
+              type={showPassword ? "text" : "password"}
               id="signin-password"
               name="password"
               value={formData.password}
@@ -80,9 +112,13 @@ export const SignIn: React.FC<SignInProps> = ({ onToggle, loading, setLoading })
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
             >
-              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              {showPassword ? (
+                <EyeOff className="w-5 h-5" />
+              ) : (
+                <Eye className="w-5 h-5" />
+              )}
             </button>
           </div>
         </div>
@@ -96,7 +132,7 @@ export const SignIn: React.FC<SignInProps> = ({ onToggle, loading, setLoading })
 
         {/* Submit Button */}
         <button
-          onClick={handleSubmit}
+          onClick={handleLogin}
           disabled={loading}
           className="w-full bg-gradient-to-r from-blue-600 to-emerald-600 text-white py-3 px-4 rounded-lg font-medium hover:from-blue-700 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center"
         >
@@ -116,7 +152,7 @@ export const SignIn: React.FC<SignInProps> = ({ onToggle, loading, setLoading })
         {/* Toggle to Sign Up */}
         <div className="text-center pt-4 border-t border-gray-200">
           <p className="text-gray-600 text-sm">
-            Don't have an account?{' '}
+            Don't have an account?{" "}
             <button
               onClick={onToggle}
               className="text-blue-600 hover:underline font-medium"
@@ -130,38 +166,41 @@ export const SignIn: React.FC<SignInProps> = ({ onToggle, loading, setLoading })
   );
 };
 
-// SignUp Component
+// -------------------- SignUp Component --------------------
 interface SignUpProps {
   onToggle: () => void;
   loading: boolean;
   setLoading: (loading: boolean) => void;
 }
 
-export const SignUp: React.FC<SignUpProps> = ({ onToggle, loading, setLoading }) => {
+export const SignUp: React.FC<SignUpProps> = ({
+  onToggle,
+  loading,
+  setLoading,
+}) => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    password: '',
-    confirmPassword: '',
-    agreeTerms: false
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
+    agreeTerms: false,
   });
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-   const [file, setFile] = useState<File | null>(null);
+  const [file, setFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState("");
+  const navigate = useNavigate();
 
-  console.log(imageUrl);
-  
-
-    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setFile(e.target.files[0]);
     }
   };
 
-   const handleUpload = async () => {
+  const handleUpload = async () => {
     if (!file) {
       alert("Please select a file first");
       return;
@@ -176,7 +215,6 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggle, loading, setLoading })
         "https://api.cloudinary.com/v1_1/dr1gpbjgg/image/upload",
         formData
       );
-
       setImageUrl(res.data.secure_url);
     } catch (err) {
       console.error(err);
@@ -184,46 +222,55 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggle, loading, setLoading })
     }
   };
 
+  const { register } = useAuth();
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const result = await register(
+      formData.name,
+      formData.email,
+      formData.password,
+      imageUrl
+    );
+
+    if (result.success) {
+      setTimeout(() => {
+        console.log("Redirect after successful register");
+      }, 1000);
+      navigate("/")
+      
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match!');
-      return;
-    }
-    
-    setLoading(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    console.log('Sign Up Data:', formData);
-    setLoading(false);
   };
 
   return (
     <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6">
       <div className="text-center mb-6">
         <h2 className="text-2xl font-bold text-gray-800 mb-2">Join SafeTravel</h2>
-        <p className="text-gray-600 text-sm">Create your account for safer journeys</p>
+        <p className="text-gray-600 text-sm">
+          Create your account for safer journeys
+        </p>
       </div>
 
       <div className="space-y-4">
-        {/* Name Field */}
+        {/* Full Name */}
         <div>
-          <label htmlFor="signup-name" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="signup-name"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Full Name
           </label>
           <div className="relative">
-            <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="text"
               id="signup-name"
@@ -237,13 +284,16 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggle, loading, setLoading })
           </div>
         </div>
 
-        {/* Email Field */}
+        {/* Email */}
         <div>
-          <label htmlFor="signup-email" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="signup-email"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Email Address
           </label>
           <div className="relative">
-            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="email"
               id="signup-email"
@@ -257,13 +307,16 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggle, loading, setLoading })
           </div>
         </div>
 
-        {/* Phone Field */}
+        {/* Phone */}
         <div>
-          <label htmlFor="signup-phone" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="signup-phone"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Phone Number
           </label>
           <div className="relative">
-            <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="tel"
               id="signup-phone"
@@ -277,15 +330,18 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggle, loading, setLoading })
           </div>
         </div>
 
-        {/* Password Field */}
+        {/* Password */}
         <div>
-          <label htmlFor="signup-password" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="signup-password"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Password
           </label>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
-              type={showPassword ? 'text' : 'password'}
+              type={showPassword ? "text" : "password"}
               id="signup-password"
               name="password"
               value={formData.password}
@@ -297,22 +353,29 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggle, loading, setLoading })
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
             >
-              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              {showPassword ? (
+                <EyeOff className="w-5 h-5" />
+              ) : (
+                <Eye className="w-5 h-5" />
+              )}
             </button>
           </div>
         </div>
 
-        {/* Confirm Password Field */}
+        {/* Confirm Password */}
         <div>
-          <label htmlFor="signup-confirm-password" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="signup-confirm-password"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Confirm Password
           </label>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
-              type={showConfirmPassword ? 'text' : 'password'}
+              type={showConfirmPassword ? "text" : "password"}
               id="signup-confirm-password"
               name="confirmPassword"
               value={formData.confirmPassword}
@@ -324,33 +387,46 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggle, loading, setLoading })
             <button
               type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
             >
-              {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              {showConfirmPassword ? (
+                <EyeOff className="w-5 h-5" />
+              ) : (
+                <Eye className="w-5 h-5" />
+              )}
             </button>
           </div>
         </div>
 
-        {/* //profile picture upload */}
+        {/* Profile Picture Upload */}
         <div>
-          <label htmlFor="profile-picture" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="profile-picture"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Profile picture
           </label>
-          <div className="relative">
-            <User2 className="absolute left-3 top-7 transform -translate-y-1/2 text-gray-400 w-5 h-5 "  />
-           
-            <input type="file" id='dp' name='dp' accept="image/*" className='w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-              placeholder="Enter your phone number' onChange={handleFileChange} />
-      <button
-        onClick={handleUpload}
-        className="bg-blue-500 text-white px-3 py-1 rounded ml-2 text-center mt-2"
-      >
-        Upload
-      </button>
+          <div className="relative flex items-center">
+            <User2 className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <input
+              type="file"
+              id="dp"
+              name="dp"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+            />
           </div>
+          <button
+            onClick={handleUpload}
+            type="button"
+            className="bg-blue-500 text-white px-3 py-1 rounded mt-2"
+          >
+            Upload
+          </button>
         </div>
 
-        {/* Terms Checkbox */}
+        {/* Terms */}
         <div className="flex items-start space-x-3">
           <input
             type="checkbox"
@@ -362,20 +438,20 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggle, loading, setLoading })
             required
           />
           <label htmlFor="agreeTerms" className="text-sm text-gray-600">
-            I agree to the{' '}
+            I agree to the{" "}
             <a href="#" className="text-blue-600 hover:underline">
               Terms of Service
-            </a>{' '}
-            and{' '}
+            </a>{" "}
+            and{" "}
             <a href="#" className="text-blue-600 hover:underline">
               Privacy Policy
             </a>
           </label>
         </div>
 
-        {/* Submit Button */}
+        {/* Submit */}
         <button
-          onClick={handleSubmit}
+          onClick={handleRegister}
           disabled={loading || !formData.agreeTerms}
           className="w-full bg-gradient-to-r from-blue-600 to-emerald-600 text-white py-3 px-4 rounded-lg font-medium hover:from-blue-700 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center"
         >
@@ -392,10 +468,10 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggle, loading, setLoading })
           )}
         </button>
 
-        {/* Toggle to Sign In */}
+        {/* Toggle */}
         <div className="text-center pt-4 border-t border-gray-200">
           <p className="text-gray-600 text-sm">
-            Already have an account?{' '}
+            Already have an account?{" "}
             <button
               onClick={onToggle}
               className="text-blue-600 hover:underline font-medium"

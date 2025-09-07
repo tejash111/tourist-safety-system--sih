@@ -1,4 +1,3 @@
-import React from 'react';
 import { Switch, Route } from "wouter";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
@@ -11,6 +10,7 @@ import Map from "./pages/map";
 import Profile from "./pages/profile";
 import Settings from "./pages/settings";
 import NotFound from "./pages/not-found";
+import AuthPage from "./pages/auth";
 
 function Router() {
   return (
@@ -20,6 +20,7 @@ function Router() {
       <Route path="/map" component={Map} />
       <Route path="/profile" component={Profile} />
       <Route path="/settings" component={Settings} />
+      <Route path="/auth" component={AuthPage} />
       <Route component={NotFound} />
     </Switch>
   );

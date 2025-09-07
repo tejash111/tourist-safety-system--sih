@@ -5,7 +5,8 @@ const UserSchema = new mongoose.Schema({
   password: String,
   email: String,
   image: String,
-  aadharid: String
+  aadhar: String,
+  profilePic:String
 });
 
 const AlertSchema = new mongoose.Schema({
