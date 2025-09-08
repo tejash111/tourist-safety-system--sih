@@ -1,6 +1,4 @@
-import { Switch, Route } from "wouter";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { queryClient } from "./lib/queryClient";
+import { Routes, Route } from "react-router-dom";
 import { Toaster } from "./components/ui/toaster";
 import { TooltipProvider } from "./components/ui/tooltip";
 import MobileContainer from "./components/mobile-container";
@@ -11,32 +9,63 @@ import Profile from "./pages/profile";
 import Settings from "./pages/settings";
 import NotFound from "./pages/not-found";
 import AuthPage from "./pages/auth";
+import ProtectedRoute from "./components/protectedRoutes";
 
-function Router() {
+export function App() {
   return (
-    <Switch>
-      <Route path="/" component={Home} />
-      <Route path="/emergency" component={Emergency} />
-      <Route path="/map" component={Map} />
-      <Route path="/profile" component={Profile} />
-      <Route path="/settings" component={Settings} />
-      <Route path="/auth" component={AuthPage} />
-      <Route component={NotFound} />
-    </Switch>
+    <TooltipProvider>
+      <MobileContainer>
+        <Routes>
+          {/* Public Route */}
+          <Route path="/auth" element={<AuthPage />} />
+
+          {/* Protected Routes */}
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/emergency"
+            element={
+              <ProtectedRoute>
+                <Emergency />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/map"
+            element={
+              <ProtectedRoute>
+                <Map />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <Settings />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Fallback */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </MobileContainer>
+      <Toaster />
+    </TooltipProvider>
   );
 }
-
-function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <MobileContainer>
-          <Router />
-        </MobileContainer>
-        <Toaster />
-      </TooltipProvider>
-    </QueryClientProvider>
-  );
-}
-
-export default App;
