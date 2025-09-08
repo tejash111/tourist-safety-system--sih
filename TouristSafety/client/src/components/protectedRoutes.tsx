@@ -12,7 +12,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      navigate("/auth"); // 👈 redirect to login/register page
+      navigate("/auth"); 
     }
   }, [isAuthenticated, isLoading, navigate]);
 
@@ -28,7 +28,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   }
 
   if (!isAuthenticated) {
-    return null; // Redirect happens in useEffect
+    return null; 
   }
 
   return <>{children}</>;

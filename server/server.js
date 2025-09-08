@@ -4,44 +4,44 @@ import useroutes from "./routes/user.js";
 import cookieParser from "cookie-parser";
 import http from "http";
 import { Server } from "socket.io";
+import cors from "cors";
 
 const app = express();
 const server = http.createServer(app);
+
 const io = new Server(server, {
     cors: {
-        origin: "*",
-        methods: ["GET", "POST"]
-    }
+        origin: "http://localhost:5000", // frontend origin
+        methods: ["GET", "POST"],
+        credentials: true,
+    },
 });
 
-//CORS middleware for API routes
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-    res.header('Access-Control-Allow-Credentials', 'true');
+// ✅ Proper CORS middleware
+app.use(cors({
+    origin: "http://localhost:3001", // your React dev server
+    credentials: true,               // allow cookies
+}));
 
-    if (req.method === 'OPTIONS') {
-        res.sendStatus(200);
-    } else {
-        next();
-    }
-});
-
-//middlewares
+// Middlewares
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/api/user/", useroutes);
+// API routes
+app.use("/api/user", useroutes);
 
-//socket
-const connectedUsers = new Map(); // Store connected users and their locations
+// Example test route
+app.get("/api", (req, res) => {
+    res.status(200).json({ message: "hello SIH" });
+});
 
-io.on("connection", function (socket) {
-    console.log('User connected:', socket.id);
+// Socket.IO
+const connectedUsers = new Map();
 
-    // When a new user requests all current locations
-    socket.on("request-all-locations", function () {
+io.on("connection", (socket) => {
+    console.log("User connected:", socket.id);
+
+    socket.on("request-all-locations", () => {
         const allLocations = {};
         connectedUsers.forEach((userData, userId) => {
             allLocations[userId] = userData;
@@ -49,53 +49,35 @@ io.on("connection", function (socket) {
         socket.emit("all-locations", allLocations);
     });
 
-    socket.on("send-location", function (data) {
-        // Store the user's location
+    socket.on("send-location", (data) => {
         connectedUsers.set(socket.id, {
             id: socket.id,
             latitude: data.latitude,
             longitude: data.longitude,
             accuracy: data.accuracy,
             safetyScore: data.safetyScore,
-            timestamp: data.timestamp || new Date().toISOString()
+            timestamp: data.timestamp || new Date().toISOString(),
         });
-
-        // Broadcast to all clients
         io.emit("receive-location", { id: socket.id, ...data });
     });
 
-    socket.on("panic-alert", function (alertData) {
-        console.log('Panic alert received:', alertData);
-        // Broadcast to all connected clients (including dashboards)
+    socket.on("panic-alert", (alertData) => {
+        console.log("Panic alert received:", alertData);
         io.emit("panic-alert", {
             ...alertData,
             touristId: socket.id,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
         });
-
-        // Here you could also:
-        // - Save to database
-        // - Send SMS/email to authorities
-        // - Trigger automated emergency response
     });
 
-    socket.on("disconnect", function () {
-        console.log('User disconnected:', socket.id);
-        // Remove user from connected users
+    socket.on("disconnect", () => {
+        console.log("User disconnected:", socket.id);
         connectedUsers.delete(socket.id);
-        // Notify all clients
-        io.emit('user-disconnected', socket.id);
+        io.emit("user-disconnected", socket.id);
     });
 });
 
-app.use('/api', (req, res) => {
-    res.status(200).json({
-        message: "hello SIH"
-    });
-});
-
-const PORT=3000
-
+const PORT = 3000;
 server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
