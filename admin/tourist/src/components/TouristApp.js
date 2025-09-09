@@ -7,6 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Bot, HelpCircle, IdCard, LogOut, AlertTriangle, Shield, Phone, MapPin, Navigation, Users, Activity, Send } from "lucide-react";
 import { Prompt } from "./prompt";
 import Link from "next/link";
+import Header from "./Header";
 
 // Import Leaflet CSS dynamically
 import("leaflet/dist/leaflet.css");
@@ -563,7 +564,7 @@ const TouristApp = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       {/* Enhanced Navbar */}
-
+    <Header  user={user} safetyScore={safetyScore} handleLogout={() => handleLogout } handlePanicButton={() => handlePanicButton()}  isInRiskZone={isInRiskZone}  lastUpdated={lastUpdated} />
       {/* Enhanced Dashboard Content */}
       <main className="flex-1 p-6 space-y-8">
         {/* Enhanced Stats Cards */}
