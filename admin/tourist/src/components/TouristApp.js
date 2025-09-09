@@ -7,7 +7,9 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Bot, HelpCircle, IdCard, LogOut, AlertTriangle, Shield, Phone, MapPin, Navigation, Users, Activity, Send } from "lucide-react";
 import { Prompt } from "./prompt";
 import Link from "next/link";
+import animationData from "@/lib/traveller.json"
 import Header from "./Header";
+import Lottie from "lottie-react";
 
 // Import Leaflet CSS dynamically
 import("leaflet/dist/leaflet.css");
@@ -709,75 +711,24 @@ const TouristApp = () => {
           </div>
 
           {/* Enhanced Sidebar */}
+
+    {/* <Lottie
+                animationData={animationData}
+                loop={true}
+                className="absolute bottom-0 right-0 -mb-5"
+                style={{ width: "500px", height: "500px" }}
+              /> */}
           
         </div>
       </main>
-
-      {/* Enhanced Chatbot Modal */}
-      {chatOpen && (
-        <div className="fixed bottom-6 right-6 w-96 bg-white rounded-2xl shadow-2xl border border-gray-200 z-50 overflow-hidden">
-          <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white p-4 flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <Bot className="w-6 h-6" />
-              <h3 className="font-semibold">Travel Assistant</h3>
-            </div>
-            <button
-              onClick={() => setChatOpen(false)}
-              className="text-white hover:text-emerald-200 transition"
-            >
-              ×
-            </button>
-          </div>
-
-          <div className="h-80 overflow-y-auto p-4 bg-gray-50 space-y-3">
-            {chatMessages.map((msg, index) => (
-              <div
-                key={index}
-                className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
-                <div
-                  className={`max-w-xs p-3 rounded-2xl ${msg.type === 'user'
-                    ? 'bg-emerald-600 text-white rounded-br-none'
-                    : 'bg-white text-gray-800 border border-gray-200 rounded-bl-none'
-                    }`}
-                >
-                  {msg.text}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="p-4 border-t border-gray-200 bg-white">
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                placeholder="Ask for help or information..."
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-emerald-500"
-              />
-              <button
-                onClick={handleSendMessage}
-                disabled={!newMessage.trim()}
-                className="bg-emerald-600 text-white p-2 rounded-full hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
-              >
-                <Send className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Floating Chat Button */}
-      {!chatOpen && (
+  <Link href="/ai">
         <button
-          onClick={() => setChatOpen(true)}
           className="fixed bottom-6 right-6 w-14 h-14 bg-emerald-600 text-white rounded-full flex items-center justify-center shadow-2xl hover:bg-emerald-700 transition transform hover:scale-110 z-40"
-        >
+          >
           <Bot className="w-6 h-6" />
         </button>
-      )}
+          </Link>
+      
     </div>
   );
 };
