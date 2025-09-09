@@ -43,7 +43,6 @@ const Circle = dynamic(
 const TouristApp = () => {
 
 
-
    const handleAI = async () => {
     try {
       const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyCr7RlUz910nhaLin7YMj98DqEh83TgLCA", {
