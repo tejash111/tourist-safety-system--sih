@@ -46,7 +46,19 @@ const TouristApp = () => {
         "parts": [
           {
             "text": `
-            give response based on this data
+            You are given district-level safety data with four parameters, consider an area unsafe if: 
+            - Crimes against Women >= 25%
+            - Crimes against Children >= 25%
+            - Violence >= 50%
+            - Fraud >= 5%
+
+            Write a short human-like safety note (5-6 sentences) using the data provided that:  
+              - Reassures the reader that the district is generally safe.  
+              - Notify the concerns in a friendly, conversational way (avoid giving raw statistics).  
+              - Encourages awareness and simple precautions instead of fear. 
+
+            District data:
+
 [
   {
     "district_name": "Anjaw",
