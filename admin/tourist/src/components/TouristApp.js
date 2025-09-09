@@ -564,7 +564,7 @@ const TouristApp = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       {/* Enhanced Navbar */}
-    <Header  user={user} safetyScore={safetyScore} handleLogout={() => handleLogout } handlePanicButton={() => handlePanicButton()}  isInRiskZone={isInRiskZone}  lastUpdated={lastUpdated} />
+  <Header  user={user} safetyScore={safetyScore} handleLogout={() => handleLogout } handlePanicButton={() => handlePanicButton()}  isInRiskZone={isInRiskZone}  lastUpdated={lastUpdated} />
       {/* Enhanced Dashboard Content */}
       <main className="flex-1 p-6 space-y-8">
         {/* Enhanced Stats Cards */}

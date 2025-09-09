@@ -7,6 +7,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Lottie from "lottie-react";
 import animationDate from "@/lib/logo-ai.json";
+import HeaderChatbot from "@/components/headerChatbot";
 
 // --- SVG Icons ---
 const SendIcon = () => (
@@ -187,8 +188,10 @@ ${JSON.stringify(DATASET, null, 2)}
   return (
 
 
+
     <div className="flex flex-col items-center justify-center h-screen w-full bg-[#f7f7ff] font-sans relative overflow-hidden">
       {/* Background Glow */}
+      <HeaderChatbot/>
 
       <Image
         src="/Traveling-rafiki.svg"
@@ -205,7 +208,7 @@ ${JSON.stringify(DATASET, null, 2)}
         height={1000}
       />
 
-      <div className="w-full max-w-3xl h-full my-10 flex flex-col bg-white/70 backdrop-blur-xl rounded-2xl shadow-lg border border-gray-200/50 p-6">
+      <div className="w-full max-w-3xl h-full my-10 flex flex-col bg-white/90 backdrop-blur-xl rounded-2xl shadow-lg border border-gray-200/50 p-6">
         <AnimatePresence>
           {!isChatStarted ? (
             <motion.div
